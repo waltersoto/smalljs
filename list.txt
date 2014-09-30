@@ -1,0 +1,19 @@
+﻿object literal:
+--------
+onload [x]
+ready [x]
+extend [x]
+document
+
+instance:
+---------
+on (events) [x]
+remove(event) [x]
+click []
+mouseover []
+mouseout []
+delegate [x]
+
+
+
+
