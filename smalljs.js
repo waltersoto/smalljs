@@ -317,6 +317,59 @@
             return result;
         };
 
+        this.text = function (content) {
+            /// <signature>
+            ///	<summary>
+            ///	Read content from innerHTML or value
+            ///	</summary> 
+            ///	<returns type="string|string[]" /> 
+            /// </signature>
+            /// <signature>
+            ///	<summary>
+            ///	Set content to an element's innerHTML or value.
+            ///	</summary>
+            ///	<param name="content" type="string">
+            ///	 Content to be set
+            ///	</param>
+            ///	<returns type="this" /> 
+            /// </signature>
+
+            var result = [];
+            var returnVal = (typeof content === 'undefined');
+
+            this.forEach(function () {
+                var t = this;
+                
+                var usevalue = (t.tagName.toLowerCase() === 'input' || t.tagName.toLowerCase() === 'textarea');
+                var isSelect = (t.tagName === 'SELECT');
+                if (returnVal) {
+                    if (isSelect) {
+                        //Read select/option value:
+                        //option.value(this.me[i]);
+                    }
+                    result.push(usevalue ? t.value : t.innerHTML);
+                } else {
+                    if (usevalue) {
+                        t.value = content;
+                    } else {
+                        t.innerHTML = content;
+                    }
+                }
+            });
+             
+            if (returnVal) {
+                if (result.length > 0) {
+                    if (result.length > 1) {
+                        return result;
+                    }
+                    return result[0];
+                }
+                return '';
+            }
+
+            return this;
+        };
+
 
     };
 
