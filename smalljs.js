@@ -1,5 +1,16 @@
 ﻿(function (document,global) {
    
+    if (!document.querySelectorAll) {
+        //for IE6,IE7 compatibility include any of the following libraries:
+        if (window.Sizzle) {
+            //URL: http://sizzlejs.com
+            document.querySelectorAll = Sizzle;
+        } else if (window.Selector) {
+            //URL: http://www.llamalab.com/js/selector/
+            document.querySelectorAll = Selector;
+        }
+    }
+
     function isDefined(o) {
         return typeof o !== 'undefined';
     }
@@ -29,7 +40,6 @@
                             element = doc.getElementsByClassName(arg.substring(1));
                             if (element.length === 1) { element = element[0]; }
                         }
-
                     }
                 }
                 if (element.length === 0) {
@@ -102,7 +112,7 @@
         };
 
 
-        this.add = function (event, callback) {
+        this.addEvent = function (event, callback) {
             ///	<summary>
             /// Attach an event to an element
             ///	</summary> 
@@ -134,7 +144,7 @@
             return this;
         };
 
-        this.remove = function (event, callback) {
+        this.removeEvent = function (event, callback) {
             ///	<summary>
             /// Detach an event from a element.
             ///	</summary> 
@@ -181,7 +191,7 @@
             ///	<returns type="this" />
             this.forEach(function () {
                 var p = this;
-                sj(p).add(delegatedEvent, function (event) {
+                sj(p).addEvent(delegatedEvent, function (event) {
                     event = event || window.event;
                     var target = event.target || event.srcElement;
                     var children = get(p).getElementsByTagName(child);
@@ -219,7 +229,7 @@
             ///	</param>
             ///	<returns type="this" /> 
             this.forEach(function () {
-                sj(this).add('click', callback);
+                sj(this).addEvent('click', callback);
             });
             return this;
         };
@@ -233,7 +243,7 @@
             ///	</param>
             ///	<returns type="this" /> 
             this.forEach(function () {
-                sj(this).add('mouseover', callback);
+                sj(this).addEvent('mouseover', callback);
             });
             return this;
         };
@@ -247,7 +257,7 @@
             ///	</param>
             ///	<returns type="this" /> 
             this.forEach(function () {
-                sj(this).add('mouseout', callback);
+                sj(this).addEvent('mouseout', callback);
             });
             return this;
         };
@@ -339,15 +349,24 @@
 
             this.forEach(function () {
                 var t = this;
-                
                 var usevalue = (t.tagName.toLowerCase() === 'input' || t.tagName.toLowerCase() === 'textarea');
                 var isSelect = (t.tagName === 'SELECT');
                 if (returnVal) {
                     if (isSelect) {
                         //Read select/option value:
-                        //option.value(this.me[i]);
+                        if (get(t).multiple) {
+                            for (var i = 0, m = get(t).length; i < m; i++) {
+                                if (get(t).options[i].selected) {
+                                    result.push(get(t).options[i].value);
+                                }
+                            }
+                        } else {
+                            result.push(get(t).options[get(t).selectedIndex].value);
+                        }
+                    } else {
+                        result.push(usevalue ? t.value : t.innerHTML);
                     }
-                    result.push(usevalue ? t.value : t.innerHTML);
+                    
                 } else {
                     if (usevalue) {
                         t.value = content;
@@ -368,6 +387,27 @@
             }
 
             return this;
+        };
+
+        this.appendText = function (content) {
+            ///	<summary>
+            ///	Append text to an element
+            ///	</summary>
+            ///	<param name="content" type="string">
+            ///	 Content to append
+            ///	</param>  
+            this.forEach(function () { sj(this).text(sj(this).text() + content); });
+            return this;
+        };
+
+        this.isEmpty = function () {
+            ///	<summary>
+            ///	Is innerHTML or Value empty
+            ///	</summary> 
+            ///	<returns type="Boolean" /> 
+            var r = false;
+            this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length == 0; });
+            return r;
         };
 
 
@@ -455,38 +495,43 @@
 
     sj.extend({
 
-            onload: function (fn) {
+            onload: function (callback) {
                 ///	<summary>
                 /// Execute multiple functions in the window.onload method.
                 ///	</summary>
-                ///	<param name="fn" type="function">
+                ///	<param name="callback" type="function">
                 /// Function to execute.
                 ///	</param>
                 var cur = window.onload;
                 if (typeof window.onload !== 'function') {
-                    window.onload = fn;
+                    window.onload = callback;
                 } else {
-                    if (typeof fn === 'function') {
+                    if (typeof callback === 'function') {
                         window.onload = function () {
                             if (cur) {
                                 cur();
                             }
-                            fn();
+                            callback();
                         };
                     }
                 }
             },
-            ready: function (fn) {
-
+            ready: function (callback) {
+                ///	<summary>
+                /// Execute callback function when DOM is ready
+                ///	</summary>
+                ///	<param name="callback" type="function">
+                /// Function to execute.
+                ///	</param>
                 if (typeof onReady !== 'function') {
-                    onReady = fn;
+                    onReady = callback;
                 } else {
                     var current = onReady;
                     onReady = function () {
                         if (current) {
                             current();
                         }
-                        fn();
+                        callback();
                     };
                 }
 
@@ -498,7 +543,7 @@
                         }
                     }, false);
                 } else {
-                    this.onload(fn);
+                    this.onload(callback);
                 }
             },
 
