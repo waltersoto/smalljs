@@ -1,5 +1,27 @@
-﻿(function (document,global) {
-   
+﻿/*
+The MIT License (MIT)
+
+Copyright (c) 2014 Walter M. Soto Reyes
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+(function (document, global) {
     if (!document.querySelectorAll) {
         //for IE6,IE7 compatibility include any of the following libraries:
         if (window.Sizzle) {
@@ -94,449 +116,6 @@
                 }
             }
         }
-
-        this.forEach = function (fn) {
-            ///	<summary>
-            ///	Iterate over objects  
-            ///	</summary>
-            ///	<param name="fn" type="function">
-            ///	 Function to be executed for each element.
-            ///	</param>
-            ///	<returns type="this" />
-            for (var i = 0, m = this.me.length; i < m; i++) {
-                if (typeof fn === 'function') {
-                    fn.call(this.me[i]);
-                }
-            }
-            return this;
-        };
-
-
-        this.addEvent = function (event, callback) {
-            ///	<summary>
-            /// Attach an event to an element
-            ///	</summary> 
-            ///	<param name="event" type="string">
-            /// Event name
-            ///	</param>
-            ///	<param name="callback" type="function">
-            /// Function to execute
-            ///	</param>
-            ///	<returns type="this" />
-            this.forEach(function () {
-                if (isDefined(this)) {
-                    if (this.addEventListener) {
-                        if (event.substring(0, 2) === "on") {
-                            event = event.substring(2);
-                        }
-                        this.addEventListener(event, callback, false);
-                    } else if (this.attachEvent) {
-                        if (event.length > 2) {
-                            if (event.substring(0, 2) !== "on") {
-                                event = 'on' + event;
-                            }
-                        }
-                        this.attachEvent(event, callback);
-                    }
-                }
-            });
-
-            return this;
-        };
-
-        this.removeEvent = function (event, callback) {
-            ///	<summary>
-            /// Detach an event from a element.
-            ///	</summary> 
-            ///	<param name="event" type="string">
-            /// Event name
-            ///	</param>
-            ///	<param name="callback" type="function">
-            /// Function to remove
-            ///	</param>
-            ///	<returns type="this" />
-            this.forEach(function () {
-                if (isDefined(this)) {
-                    if (this.removeEventListener) {
-                        if (event.substring(0, 2) === "on") {
-                            event = event.substring(2);
-                        }
-                        this.removeEventListener(event, callback, false);
-                    } else if (this.detachEvent) {
-                        if (event.length > 2) {
-                            if (event.substring(0, 2) !== "on") {
-                                event = 'on' + event;
-                            }
-                        }
-                        this.detachEvent(event, callback);
-                    }
-                }
-            });
-            return this;
-        };
-
-        this.delegate = function (child, delegatedEvent, callback) {
-            ///	<summary>
-            ///	Delegate event handling to a parent
-            ///	</summary>
-            ///	<param name="child" type="string">
-            ///	 child tag, identifier, or selector
-            ///	</param> 
-            ///	<param name="delegatedEvent" type="string">
-            ///	 Action or event to delegate
-            ///	</param> 
-            ///	<param name="callback" type="string">
-            ///	 Function to execute
-            ///	</param> 
-            ///	<returns type="this" />
-            this.forEach(function () {
-                var p = this;
-                sj(p).addEvent(delegatedEvent, function (event) {
-                    event = event || window.event;
-                    var target = event.target || event.srcElement;
-                    var children = get(p).getElementsByTagName(child);
-                    if (children.length == 0) {
-                        if (get(p).querySelectorAll) {
-                            children = get(p).querySelectorAll(child);
-                        } 
-                    }
-                    if (children.length > 0) {
-                        for (var i = 0, m = children.length; i < m; i++) {
-                            if (target.id.length > 0) {
-                                if (target.id == children[i].id) { callback.call(children[i]); }
-                            } else {
-                                if (target == get(children[i])) { callback.call(children[i]); }
-                            }
-                        }
-                    } else {
-                        if (target.id.length > 0) {
-                            if (target.id == children.id) { callback.call(children); }
-                        } else {
-                            if (target == children) { callback.call(children); }
-                        }
-                    }
-                }); 
-            }); 
-            return this;
-        };
-
-        this.onClick = function (callback) {
-            ///	<summary>
-            ///	Add an onclick event
-            ///	</summary>
-            ///	<param name="callback" type="function">
-            ///	 Callback function
-            ///	</param>
-            ///	<returns type="this" /> 
-            this.forEach(function () {
-                sj(this).addEvent('click', callback);
-            });
-            return this;
-        };
-
-        this.onMouseover = function (callback) {
-            ///	<summary>
-            ///	Add an onclick event
-            ///	</summary>
-            ///	<param name="callback" type="function">
-            ///	 Callback function
-            ///	</param>
-            ///	<returns type="this" /> 
-            this.forEach(function () {
-                sj(this).addEvent('mouseover', callback);
-            });
-            return this;
-        };
-
-        this.onMouseout = function (callback) {
-            ///	<summary>
-            ///	Add an onclick event
-            ///	</summary>
-            ///	<param name="callback" type="function">
-            ///	 Callback function
-            ///	</param>
-            ///	<returns type="this" /> 
-            this.forEach(function () {
-                sj(this).addEvent('mouseout', callback);
-            });
-            return this;
-        };
-
-        this.att = function (name, value) {
-            /// <signature>
-            ///   <summary>Read attribute from element</summary>
-            ///   <param name="name" type="string">Attribute name</param> 
-            ///	  <returns type="string|string[]" /> 
-            /// </signature>
-            /// <signature>
-            ///   <summary>Set attribute value</summary>
-            ///   <param name="name" type="string">Attribute name</param>
-            ///   <param name="value" type="string">Attribute value</param> 
-            ///	  <returns type="this" /> 
-            /// </signature> 
-            var r = [];
-            this.forEach(function () {
-                if (isDefined(value)) {
-                    get(this).setAttribute(name, value);
-                } else {
-                    var t = get(this).getAttribute(name);
-                    if (t) {
-                        r.push(t);
-                    }
-                }
-            });
-
-            if (isDefined(value)) {
-                return this;
-            }
-
-            if (r.length > 1) {
-                return r;
-            }
-
-            if (r.length == 1) {
-                return r[0];
-            }
-
-            return "";
-        };
-
-        this.removeAtt = function (name) {
-            ///	<summary>
-            ///	Remove an attribute from element
-            ///	</summary>
-            /// <param name="name" type="string">Attribute name</param>
-            this.forEach(function () {
-                $(this).removeAttribute(name);
-            });
-        }
-
-        this.checkAtt = function (name) {
-            ///	<summary>
-            ///	Check if attribute exists
-            ///	</summary>
-            /// <param name="name" type="string">Attribute name</param>
-            ///	<returns type="boolean" /> 
-            var result = false;
-            this.forEach(function () {
-                var t = get(this).getAttribute(name);
-                if (t) {
-                    result = true;
-                }
-            });
-            return result;
-        };
-
-        this.text = function (content) {
-            /// <signature>
-            ///	<summary>
-            ///	Read content from innerHTML or value
-            ///	</summary> 
-            ///	<returns type="string|string[]" /> 
-            /// </signature>
-            /// <signature>
-            ///	<summary>
-            ///	Set content to an element's innerHTML or value.
-            ///	</summary>
-            ///	<param name="content" type="string">
-            ///	 Content to be set
-            ///	</param>
-            ///	<returns type="this" /> 
-            /// </signature>
-
-            var result = [];
-            var returnVal = (typeof content === 'undefined');
-
-            this.forEach(function () {
-                var t = this;
-                var usevalue = (t.tagName.toLowerCase() === 'input' || t.tagName.toLowerCase() === 'textarea');
-                var isSelect = (t.tagName === 'SELECT');
-                if (returnVal) {
-                    if (isSelect) {
-                        //Read select/option value:
-                        if (get(t).multiple) {
-                            for (var i = 0, m = get(t).length; i < m; i++) {
-                                if (get(t).options[i].selected) {
-                                    result.push(get(t).options[i].value);
-                                }
-                            }
-                        } else {
-                            result.push(get(t).options[get(t).selectedIndex].value);
-                        }
-                    } else {
-                        result.push(usevalue ? t.value : t.innerHTML);
-                    }
-                    
-                } else {
-                    if (usevalue) {
-                        t.value = content;
-                    } else {
-                        t.innerHTML = content;
-                    }
-                }
-            });
-             
-            if (returnVal) {
-                if (result.length > 0) {
-                    if (result.length > 1) {
-                        return result;
-                    }
-                    return result[0];
-                }
-                return '';
-            }
-
-            return this;
-        };
-
-        this.appendText = function (content) {
-            ///	<summary>
-            ///	Append text to an element
-            ///	</summary>
-            ///	<param name="content" type="string">
-            ///	 Content to append
-            ///	</param>  
-            this.forEach(function () { sj(this).text(sj(this).text() + content); });
-            return this;
-        };
-
-        this.isEmpty = function () {
-            ///	<summary>
-            ///	Is innerHTML or Value empty
-            ///	</summary> 
-            ///	<returns type="Boolean" /> 
-            var r = false;
-            this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length == 0; });
-            return r;
-        };
-
-        this.style = function () {
-            ///	<summary>
-            ///	Add CSS style elements as parameters.
-            /// Example:
-            /// .style('width:100px',
-            ///      'border:1px solid #333333',
-            ///      'color:#dddddd');
-            ///	</summary>
-            ///	<returns type="this" />    
-            if (arguments.length >= 1) {
-                var newstyle = [];
-                for (var i = 0, m = arguments.length; i < m; i++) {
-                    if (arguments[i].contains(':')) {
-                        newstyle.push(arguments[i]);
-                    }
-                }
-                this.forEach(function () {
-                    var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
-                    if (current == null) { current = ''; }
-                    var txt = '';
-                    var sc = current.split(';');
-                    var exclude = [];
-                    for (var i = 0, mi = sc.length; i < mi; i++) {
-                        var term = sc[i].split(':');
-                        for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
-                            var nterm = newstyle[ns].split(':');
-                            if (nterm[0] == term[0]) {
-                                sc[i] = newstyle[ns];
-                                exclude.push(ns);
-                            }
-                        }
-                        if (sc[i].length > 1) {
-                            txt += sc[i].replace(';', '') + ';';
-                        }
-                    }
-                    for (var en = 0, enm = exclude.length; en < enm; en++) {
-                        newstyle.splice(exclude[en], 1);
-                    }
-                    for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
-                        if (newstyle[ns].length > 1) {
-                            txt += newstyle[ns].replace(';', '') + ';';
-                        }
-                    }
-                    if (window.attachEvent) {
-                        get(this).style.cssText = txt;
-                    } else {
-                        get(this).setAttribute('style', txt);
-                    }
-
-                });
-
-            }
-
-            return this;
-        };
-
-        this.hasStyle = function (style) {
-            ///	<summary>
-            ///	Returns true is style exists in the element.
-            /// Example:
-            /// Is style 'width:100px' defined in element 'id'?
-            /// sj('id').hasStyle('width:100px'); 
-            ///
-            /// Is style 'width' defined in element 'id'?
-            /// sj('id').hasStyle('width');
-            ///	</summary>
-            ///	<returns type="Boolean" /> 
-            var result = false;
-
-            if (this.me.length == 0) { return result; }
-                        
-
-            this.forEach(function () {
-
-            });
-
-            var current = (window.attachEvent) ? get(this.me[0]).style.cssText : get(this.me[0]).getAttribute('style');
-            if (current == null) { return false; }
-            var sc = current.split(';');
-            var to = '';
-            var val = '*';
-            if (style.contains(':')) {
-                var spl = style.split(':');
-                to = spl[0];
-                val = spl[1];
-            } else {
-                to = style;
-            }
-            for (var i = 0, m = sc.length; i < m; i++) {
-                var term = sc[i].split(':');
-                if (term.length == 2) {
-                    if (val != '*') {
-                        if (term[0].toLowerCase().trim() === to.toLowerCase().trim() && term[1].toLowerCase().trim() === val.toLowerCase().trim()) {
-                            return true;
-                        }
-                    } else {
-                        if (term[0].toLowerCase().trim() === to.toLowerCase().trim()) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-
-        };
-
-        this.classExists = function (className) {
-            ///	<summary>
-            /// Does css class already exists?
-            ///	</summary>
-            ///	<param name="className" type="string">
-            /// CSS class name
-            ///	</param> 
-            ///	<returns type="Boolean" /> 
-            var result = false;
-
-            this.forEach(function () {
-                var i = get(this);
-                if (isDefined(i)) {
-                    result = new RegExp('(?:^|\\s)' + className + '(?!\\S)').test(i.className);
-                }
-            });
-
-            return result;
-        };
-
-
     };
 
     function sj() {
@@ -596,6 +175,7 @@
     };
  
     sj.extend({
+        get:get,
         plugin: function (extension) {
             ///	<summary>
             ///	Add a plugin method
@@ -675,6 +255,511 @@
 
         });
     
+
+    sj.plugin({
+
+     forEach:function (fn) {
+        ///	<summary>
+        ///	Iterate over objects  
+        ///	</summary>
+        ///	<param name="fn" type="function">
+        ///	 Function to be executed for each element.
+        ///	</param>
+        ///	<returns type="this" />
+            for (var i = 0, m = this.me.length; i < m; i++) {
+                if (typeof fn === 'function') {
+                    fn.call(this.me[i]);
+                }
+            }
+            return this;
+      },
+     addEvent:function (event, callback) {
+        ///	<summary>
+        /// Attach an event to an element
+        ///	</summary> 
+        ///	<param name="event" type="string">
+        /// Event name
+        ///	</param>
+        ///	<param name="callback" type="function">
+        /// Function to execute
+        ///	</param>
+        ///	<returns type="this" />
+        this.forEach(function () {
+            if (isDefined(this)) {
+                if (this.addEventListener) {
+                    if (event.substring(0, 2) === "on") {
+                        event = event.substring(2);
+                    }
+                    this.addEventListener(event, callback, false);
+                } else if (this.attachEvent) {
+                    if (event.length > 2) {
+                        if (event.substring(0, 2) !== "on") {
+                            event = 'on' + event;
+                        }
+                    }
+                    this.attachEvent(event, callback);
+                }
+            }
+        });
+
+        return this;
+     },
+     removeEvent:function (event, callback) {
+        ///	<summary>
+        /// Detach an event from a element.
+        ///	</summary> 
+        ///	<param name="event" type="string">
+        /// Event name
+        ///	</param>
+        ///	<param name="callback" type="function">
+        /// Function to remove
+        ///	</param>
+        ///	<returns type="this" />
+        this.forEach(function () {
+            if (isDefined(this)) {
+                if (this.removeEventListener) {
+                    if (event.substring(0, 2) === "on") {
+                        event = event.substring(2);
+                    }
+                    this.removeEventListener(event, callback, false);
+                } else if (this.detachEvent) {
+                    if (event.length > 2) {
+                        if (event.substring(0, 2) !== "on") {
+                            event = 'on' + event;
+                        }
+                    }
+                    this.detachEvent(event, callback);
+                }
+            }
+        });
+        return this;
+     },
+     delegate:function (child, delegatedEvent, callback) {
+        ///	<summary>
+        ///	Delegate event handling to a parent
+        ///	</summary>
+        ///	<param name="child" type="string">
+        ///	 child tag, identifier, or selector
+        ///	</param> 
+        ///	<param name="delegatedEvent" type="string">
+        ///	 Action or event to delegate
+        ///	</param> 
+        ///	<param name="callback" type="string">
+        ///	 Function to execute
+        ///	</param> 
+        ///	<returns type="this" />
+        this.forEach(function () {
+            var p = this;
+            sj(p).addEvent(delegatedEvent, function (event) {
+                event = event || window.event;
+                var target = event.target || event.srcElement;
+                var children = get(p).getElementsByTagName(child);
+                if (children.length == 0) {
+                    if (get(p).querySelectorAll) {
+                        children = get(p).querySelectorAll(child);
+                    } 
+                }
+                if (children.length > 0) {
+                    for (var i = 0, m = children.length; i < m; i++) {
+                        if (target.id.length > 0) {
+                            if (target.id == children[i].id) { callback.call(children[i]); }
+                        } else {
+                            if (target == get(children[i])) { callback.call(children[i]); }
+                        }
+                    }
+                } else {
+                    if (target.id.length > 0) {
+                        if (target.id == children.id) { callback.call(children); }
+                    } else {
+                        if (target == children) { callback.call(children); }
+                    }
+                }
+            }); 
+        }); 
+        return this;
+    },
+    onClick:function (callback) {
+        ///	<summary>
+        ///	Add an onclick event
+        ///	</summary>
+        ///	<param name="callback" type="function">
+        ///	 Callback function
+        ///	</param>
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            sj(this).addEvent('click', callback);
+        });
+        return this;
+    },
+    onMouseover:function (callback) {
+        ///	<summary>
+        ///	Add an onclick event
+        ///	</summary>
+        ///	<param name="callback" type="function">
+        ///	 Callback function
+        ///	</param>
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            sj(this).addEvent('mouseover', callback);
+        });
+        return this;
+    },
+    onMouseout : function (callback) {
+        ///	<summary>
+        ///	Add an onclick event
+        ///	</summary>
+        ///	<param name="callback" type="function">
+        ///	 Callback function
+        ///	</param>
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            sj(this).addEvent('mouseout', callback);
+        });
+        return this;
+    },
+    att:function (name, value) {
+        /// <signature>
+        ///   <summary>Read attribute from element</summary>
+        ///   <param name="name" type="string">Attribute name</param> 
+        ///	  <returns type="string|string[]" /> 
+        /// </signature>
+        /// <signature>
+        ///   <summary>Set attribute value</summary>
+        ///   <param name="name" type="string">Attribute name</param>
+        ///   <param name="value" type="string">Attribute value</param> 
+        ///	  <returns type="this" /> 
+        /// </signature> 
+        var r = [];
+        this.forEach(function () {
+            if (isDefined(value)) {
+                get(this).setAttribute(name, value);
+            } else {
+                var t = get(this).getAttribute(name);
+                if (t) {
+                    r.push(t);
+                }
+            }
+        });
+
+        if (isDefined(value)) {
+            return this;
+        }
+
+        if (r.length > 1) {
+            return r;
+        }
+
+        if (r.length == 1) {
+            return r[0];
+        }
+
+        return "";
+    },
+    removeAtt:function (name) {
+        ///	<summary>
+        ///	Remove an attribute from element
+        ///	</summary>
+        /// <param name="name" type="string">Attribute name</param>
+        this.forEach(function () {
+            $(this).removeAttribute(name);
+        });
+    },
+    checkAtt:function (name) {
+        ///	<summary>
+        ///	Check if attribute exists
+        ///	</summary>
+        /// <param name="name" type="string">Attribute name</param>
+        ///	<returns type="boolean" /> 
+        var result = false;
+        this.forEach(function () {
+            var t = get(this).getAttribute(name);
+            if (t) {
+                result = true;
+            }
+        });
+        return result;
+    },
+    text:function (content) {
+        /// <signature>
+        ///	<summary>
+        ///	Read content from innerHTML or value
+        ///	</summary> 
+        ///	<returns type="string|string[]" /> 
+        /// </signature>
+        /// <signature>
+        ///	<summary>
+        ///	Set content to an element's innerHTML or value.
+        ///	</summary>
+        ///	<param name="content" type="string">
+        ///	 Content to be set
+        ///	</param>
+        ///	<returns type="this" /> 
+        /// </signature>
+
+        var result = [];
+        var returnVal = (typeof content === 'undefined');
+
+        this.forEach(function () {
+            var t = this;
+            var usevalue = (t.tagName.toLowerCase() === 'input' || t.tagName.toLowerCase() === 'textarea');
+            var isSelect = (t.tagName === 'SELECT');
+            if (returnVal) {
+                if (isSelect) {
+                    //Read select/option value:
+                    if (get(t).multiple) {
+                        for (var i = 0, m = get(t).length; i < m; i++) {
+                            if (get(t).options[i].selected) {
+                                result.push(get(t).options[i].value);
+                            }
+                        }
+                    } else {
+                        result.push(get(t).options[get(t).selectedIndex].value);
+                    }
+                } else {
+                    result.push(usevalue ? t.value : t.innerHTML);
+                }
+                    
+            } else {
+                if (usevalue) {
+                    t.value = content;
+                } else {
+                    t.innerHTML = content;
+                }
+            }
+        });
+             
+        if (returnVal) {
+            if (result.length > 0) {
+                if (result.length > 1) {
+                    return result;
+                }
+                return result[0];
+            }
+            return '';
+        }
+
+        return this;
+    },
+    appendText:function (content) {
+        ///	<summary>
+        ///	Append text to an element
+        ///	</summary>
+        ///	<param name="content" type="string">
+        ///	 Content to append
+        ///	</param>  
+        this.forEach(function () { sj(this).text(sj(this).text() + content); });
+        return this;
+    },
+    isEmpty:function () {
+        ///	<summary>
+        ///	Is innerHTML or Value empty
+        ///	</summary> 
+        ///	<returns type="Boolean" /> 
+        var r = false;
+        this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length == 0; });
+        return r;
+    },
+    style:function () {
+        ///	<summary>
+        ///	Add CSS style elements as parameters.
+        /// Example:
+        /// .style('width:100px',
+        ///      'border:1px solid #333333',
+        ///      'color:#dddddd');
+        ///	</summary>
+        ///	<returns type="this" />    
+        if (arguments.length >= 1) {
+            var newstyle = [];
+            for (var i = 0, m = arguments.length; i < m; i++) {
+                if (arguments[i].contains(':')) {
+                    newstyle.push(arguments[i]);
+                }
+            }
+            this.forEach(function () {
+                var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
+                if (current == null) { current = ''; }
+                var txt = '';
+                var sc = current.split(';');
+                var exclude = [];
+                for (var i = 0, mi = sc.length; i < mi; i++) {
+                    var term = sc[i].split(':');
+                    for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
+                        var nterm = newstyle[ns].split(':');
+                        if (nterm[0] == term[0]) {
+                            sc[i] = newstyle[ns];
+                            exclude.push(ns);
+                        }
+                    }
+                    if (sc[i].length > 1) {
+                        txt += sc[i].replace(';', '') + ';';
+                    }
+                }
+                for (var en = 0, enm = exclude.length; en < enm; en++) {
+                    newstyle.splice(exclude[en], 1);
+                }
+                for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
+                    if (newstyle[ns].length > 1) {
+                        txt += newstyle[ns].replace(';', '') + ';';
+                    }
+                }
+                if (window.attachEvent) {
+                    get(this).style.cssText = txt;
+                } else {
+                    get(this).setAttribute('style', txt);
+                }
+
+            });
+
+        }
+
+        return this;
+    },
+    hasStyle:function (style) {
+        ///	<summary>
+        ///	Returns true is style exists in the element.
+        /// Example:
+        /// Is style 'width:100px' defined in element 'id'?
+        /// sj('id').hasStyle('width:100px'); 
+        ///
+        /// Is style 'width' defined in element 'id'?
+        /// sj('id').hasStyle('width');
+        ///	</summary>
+        ///	<returns type="Boolean" /> 
+        var result = false;
+
+        if (this.me.length == 0) { return result; }
+                        
+
+        this.forEach(function () {
+
+        });
+
+        var current = (window.attachEvent) ? get(this.me[0]).style.cssText : get(this.me[0]).getAttribute('style');
+        if (current == null) { return false; }
+        var sc = current.split(';');
+        var to = '';
+        var val = '*';
+        if (style.contains(':')) {
+            var spl = style.split(':');
+            to = spl[0];
+            val = spl[1];
+        } else {
+            to = style;
+        }
+        for (var i = 0, m = sc.length; i < m; i++) {
+            var term = sc[i].split(':');
+            if (term.length == 2) {
+                if (val != '*') {
+                    if (term[0].toLowerCase().trim() === to.toLowerCase().trim() && term[1].toLowerCase().trim() === val.toLowerCase().trim()) {
+                        return true;
+                    }
+                } else {
+                    if (term[0].toLowerCase().trim() === to.toLowerCase().trim()) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+
+    },
+    classExists:function (className) {
+        ///	<summary>
+        /// Does css class already exists?
+        ///	</summary>
+        ///	<param name="className" type="string">
+        /// CSS class name
+        ///	</param> 
+        ///	<returns type="Boolean" /> 
+        var result = false;
+
+        this.forEach(function () {
+            var i = get(this);
+            if (isDefined(i)) {
+                result = new RegExp('(?:^|\\s)' + className + '(?!\\S)').test(i.className);
+            }
+        });
+
+        return result;
+    },
+    addClass:function (className) {
+        ///	<summary>
+        /// Add a css class
+        ///	</summary>
+        ///	<param name="className" type="string">
+        /// CSS class name
+        ///	</param> 
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            if (isDefined(this.className)) {
+                if (this.className.length <= 0) {
+                    this.className = className;
+                } else {
+                    if (!sj(this).classExists(className)) {
+                        var current = this.className;
+                        this.className = className + ' ' + current;
+                    }
+                }
+            } 
+        });
+
+        return this;
+    },
+    removeClass:function (className) {
+        ///	<summary>
+        /// Remove CSS class
+        ///	</summary>
+        ///	<param name="className" type="string">
+        /// CSS class name
+        ///	</param> 
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            if (isDefined(this.className)) {
+                if (sj(this).classExists(className)) {
+                    this.className = this.className.replace(new RegExp('(?:^|\\s)' + className + '(?!\\S)'), '');
+                }
+            }
+        });
+        return this;
+    },
+   replaceClass:function (originalClass, newClass) {
+        ///	<summary>
+        /// Replace a CSS class
+        ///	</summary>
+        ///	<param name="originalClass" type="string">
+        /// Original class name
+        ///	</param> 
+        ///	<param name="newClass" type="string">
+        /// New class name
+        ///	</param> 
+        ///	<returns type="this" /> 
+        this.removeClass(originalClass);
+        this.addClass(newClass);
+    },
+    toggleClasses:function(fromClass, toClass) {
+            ///	<summary>
+            /// Toggle between two CSS classes
+            ///	</summary>
+            ///	<param name="fromClass" type="string">
+            /// CSS class name
+            ///	</param> 
+            ///	<param name="toClass" type="string">
+            /// CSS class name
+            ///	</param> 
+            ///	<returns type="this" /> 
+            this.forEach(function () {
+
+                if (sj(this).classExists(fromClass)) {
+                    sj(this).replaceClass(fromClass, toClass);
+                } else {
+                    sj(this).replaceClass(toClass, fromClass);
+                }
+            });
+        }
+    }
+
+    );
+
 
     if (!global.smalljs) {
         global.smalljs = global['smalljs'] = sj;
