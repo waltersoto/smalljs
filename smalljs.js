@@ -410,6 +410,132 @@
             return r;
         };
 
+        this.style = function () {
+            ///	<summary>
+            ///	Add CSS style elements as parameters.
+            /// Example:
+            /// .style('width:100px',
+            ///      'border:1px solid #333333',
+            ///      'color:#dddddd');
+            ///	</summary>
+            ///	<returns type="this" />    
+            if (arguments.length >= 1) {
+                var newstyle = [];
+                for (var i = 0, m = arguments.length; i < m; i++) {
+                    if (arguments[i].contains(':')) {
+                        newstyle.push(arguments[i]);
+                    }
+                }
+                this.forEach(function () {
+                    var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
+                    if (current == null) { current = ''; }
+                    var txt = '';
+                    var sc = current.split(';');
+                    var exclude = [];
+                    for (var i = 0, mi = sc.length; i < mi; i++) {
+                        var term = sc[i].split(':');
+                        for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
+                            var nterm = newstyle[ns].split(':');
+                            if (nterm[0] == term[0]) {
+                                sc[i] = newstyle[ns];
+                                exclude.push(ns);
+                            }
+                        }
+                        if (sc[i].length > 1) {
+                            txt += sc[i].replace(';', '') + ';';
+                        }
+                    }
+                    for (var en = 0, enm = exclude.length; en < enm; en++) {
+                        newstyle.splice(exclude[en], 1);
+                    }
+                    for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
+                        if (newstyle[ns].length > 1) {
+                            txt += newstyle[ns].replace(';', '') + ';';
+                        }
+                    }
+                    if (window.attachEvent) {
+                        get(this).style.cssText = txt;
+                    } else {
+                        get(this).setAttribute('style', txt);
+                    }
+
+                });
+
+            }
+
+            return this;
+        };
+
+        this.hasStyle = function (style) {
+            ///	<summary>
+            ///	Returns true is style exists in the element.
+            /// Example:
+            /// Is style 'width:100px' defined in element 'id'?
+            /// sj('id').hasStyle('width:100px'); 
+            ///
+            /// Is style 'width' defined in element 'id'?
+            /// sj('id').hasStyle('width');
+            ///	</summary>
+            ///	<returns type="Boolean" /> 
+            var result = false;
+
+            if (this.me.length == 0) { return result; }
+                        
+
+            this.forEach(function () {
+
+            });
+
+            var current = (window.attachEvent) ? get(this.me[0]).style.cssText : get(this.me[0]).getAttribute('style');
+            if (current == null) { return false; }
+            var sc = current.split(';');
+            var to = '';
+            var val = '*';
+            if (style.contains(':')) {
+                var spl = style.split(':');
+                to = spl[0];
+                val = spl[1];
+            } else {
+                to = style;
+            }
+            for (var i = 0, m = sc.length; i < m; i++) {
+                var term = sc[i].split(':');
+                if (term.length == 2) {
+                    if (val != '*') {
+                        if (term[0].toLowerCase().trim() === to.toLowerCase().trim() && term[1].toLowerCase().trim() === val.toLowerCase().trim()) {
+                            return true;
+                        }
+                    } else {
+                        if (term[0].toLowerCase().trim() === to.toLowerCase().trim()) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+
+        };
+
+        this.classExists = function (className) {
+            ///	<summary>
+            /// Does css class already exists?
+            ///	</summary>
+            ///	<param name="className" type="string">
+            /// CSS class name
+            ///	</param> 
+            ///	<returns type="Boolean" /> 
+            var result = false;
+
+            this.forEach(function () {
+                var i = get(this);
+                if (isDefined(i)) {
+                    result = new RegExp('(?:^|\\s)' + className + '(?!\\S)').test(i.className);
+                }
+            });
+
+            return result;
+        };
+
 
     };
 
