@@ -36,6 +36,12 @@ SOFTWARE.
     function isDefined(o) {
         return typeof o !== 'undefined';
     }
+    function contains(str,substring) {
+        return str.indexOf(substring) != -1;
+    }
+    function trim(str) {
+        return str.replace(/^\s+|\s+$/g, "");
+    }
 
     var get = function () {
         ///	<summary>
@@ -117,6 +123,8 @@ SOFTWARE.
             }
         }
     };
+ 
+   
 
     function sj() {
         /// <signature>
@@ -256,9 +264,7 @@ SOFTWARE.
         });
     
 
-    sj.plugin({
-
-     forEach:function (fn) {
+    instance.prototype.forEach = function (fn) {
         ///	<summary>
         ///	Iterate over objects  
         ///	</summary>
@@ -266,14 +272,15 @@ SOFTWARE.
         ///	 Function to be executed for each element.
         ///	</param>
         ///	<returns type="this" />
-            for (var i = 0, m = this.me.length; i < m; i++) {
-                if (typeof fn === 'function') {
-                    fn.call(this.me[i]);
-                }
+        for (var i = 0, m = this.me.length; i < m; i++) {
+            if (typeof fn === 'function') {
+                fn.call(this.me[i]);
             }
-            return this;
-      },
-     addEvent:function (event, callback) {
+        }
+        return this;
+    };
+
+    instance.prototype.addEvent = function (event, callback) {
         ///	<summary>
         /// Attach an event to an element
         ///	</summary> 
@@ -303,8 +310,9 @@ SOFTWARE.
         });
 
         return this;
-     },
-     removeEvent:function (event, callback) {
+    };
+
+    instance.prototype.removeEvent = function (event, callback) {
         ///	<summary>
         /// Detach an event from a element.
         ///	</summary> 
@@ -333,8 +341,9 @@ SOFTWARE.
             }
         });
         return this;
-     },
-     delegate:function (child, delegatedEvent, callback) {
+    };
+
+    instance.prototype.delegate = function (child, delegatedEvent, callback) {
         ///	<summary>
         ///	Delegate event handling to a parent
         ///	</summary>
@@ -377,8 +386,9 @@ SOFTWARE.
             }); 
         }); 
         return this;
-    },
-    onClick:function (callback) {
+    };
+
+    instance.prototype.onClick = function (callback) {
         ///	<summary>
         ///	Add an onclick event
         ///	</summary>
@@ -390,8 +400,9 @@ SOFTWARE.
             sj(this).addEvent('click', callback);
         });
         return this;
-    },
-    onMouseover:function (callback) {
+    };
+
+    instance.prototype.onMouseover = function (callback) {
         ///	<summary>
         ///	Add an onclick event
         ///	</summary>
@@ -403,8 +414,9 @@ SOFTWARE.
             sj(this).addEvent('mouseover', callback);
         });
         return this;
-    },
-    onMouseout : function (callback) {
+    };
+
+    instance.prototype.onMouseout = function (callback) {
         ///	<summary>
         ///	Add an onclick event
         ///	</summary>
@@ -416,8 +428,9 @@ SOFTWARE.
             sj(this).addEvent('mouseout', callback);
         });
         return this;
-    },
-    att:function (name, value) {
+    };
+
+    instance.prototype.att = function (name, value) {
         /// <signature>
         ///   <summary>Read attribute from element</summary>
         ///   <param name="name" type="string">Attribute name</param> 
@@ -454,8 +467,9 @@ SOFTWARE.
         }
 
         return "";
-    },
-    removeAtt:function (name) {
+    };
+
+    instance.prototype.removeAtt = function (name) {
         ///	<summary>
         ///	Remove an attribute from element
         ///	</summary>
@@ -463,8 +477,9 @@ SOFTWARE.
         this.forEach(function () {
             $(this).removeAttribute(name);
         });
-    },
-    checkAtt:function (name) {
+    };
+
+    instance.prototype.checkAtt = function (name) {
         ///	<summary>
         ///	Check if attribute exists
         ///	</summary>
@@ -478,8 +493,9 @@ SOFTWARE.
             }
         });
         return result;
-    },
-    text:function (content) {
+    };
+
+    instance.prototype.text = function (content) {
         /// <signature>
         ///	<summary>
         ///	Read content from innerHTML or value
@@ -539,8 +555,9 @@ SOFTWARE.
         }
 
         return this;
-    },
-    appendText:function (content) {
+    };
+
+    instance.prototype.appendText = function (content) {
         ///	<summary>
         ///	Append text to an element
         ///	</summary>
@@ -549,8 +566,9 @@ SOFTWARE.
         ///	</param>  
         this.forEach(function () { sj(this).text(sj(this).text() + content); });
         return this;
-    },
-    isEmpty:function () {
+    };
+
+    instance.prototype.isEmpty = function () {
         ///	<summary>
         ///	Is innerHTML or Value empty
         ///	</summary> 
@@ -558,8 +576,9 @@ SOFTWARE.
         var r = false;
         this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length == 0; });
         return r;
-    },
-    style:function () {
+    };
+ 
+    instance.prototype.style = function () {
         ///	<summary>
         ///	Add CSS style elements as parameters.
         /// Example:
@@ -571,7 +590,7 @@ SOFTWARE.
         if (arguments.length >= 1) {
             var newstyle = [];
             for (var i = 0, m = arguments.length; i < m; i++) {
-                if (arguments[i].contains(':')) {
+                if (contains(arguments[i],':')) {
                     newstyle.push(arguments[i]);
                 }
             }
@@ -613,16 +632,17 @@ SOFTWARE.
         }
 
         return this;
-    },
-    hasStyle:function (style) {
+    };
+
+    instance.prototype.hasStyle = function(style) {
         ///	<summary>
         ///	Returns true is style exists in the element.
         /// Example:
         /// Is style 'width:100px' defined in element 'id'?
-        /// sj('id').hasStyle('width:100px'); 
+        /// smalljs('id').hasStyle('width:100px'); 
         ///
         /// Is style 'width' defined in element 'id'?
-        /// sj('id').hasStyle('width');
+        /// smalljs('id').hasStyle('width');
         ///	</summary>
         ///	<returns type="Boolean" /> 
         var result = false;
@@ -632,38 +652,66 @@ SOFTWARE.
 
         this.forEach(function () {
 
-        });
-
-        var current = (window.attachEvent) ? get(this.me[0]).style.cssText : get(this.me[0]).getAttribute('style');
-        if (current == null) { return false; }
-        var sc = current.split(';');
-        var to = '';
-        var val = '*';
-        if (style.contains(':')) {
-            var spl = style.split(':');
-            to = spl[0];
-            val = spl[1];
-        } else {
-            to = style;
-        }
-        for (var i = 0, m = sc.length; i < m; i++) {
-            var term = sc[i].split(':');
-            if (term.length == 2) {
-                if (val != '*') {
-                    if (term[0].toLowerCase().trim() === to.toLowerCase().trim() && term[1].toLowerCase().trim() === val.toLowerCase().trim()) {
-                        return true;
-                    }
-                } else {
-                    if (term[0].toLowerCase().trim() === to.toLowerCase().trim()) {
-                        return true;
+            var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
+            if (current == null) { return false; }
+            var sc = current.split(';');
+            var to = '';
+            var val = '*';
+            if (contains(style,':')) {
+                var spl = style.split(':');
+                to = spl[0];
+                val = spl[1];
+            } else {
+                to = style;
+            }
+            for (var i = 0, m = sc.length; i < m; i++) {
+                var term = sc[i].split(':');
+                if (term.length == 2) {
+                    if (val != '*') {
+                        if (trim(term[0].toLowerCase()) === trim(to.toLowerCase()) && trim(term[1].toLowerCase()) === trim(val.toLowerCase())) {
+                            result = true;
+                        }
+                    } else {
+                        if (trim(term[0].toLowerCase()) === trim(to.toLowerCase())) {
+                            result = true;
+                        }
                     }
                 }
             }
-        }
-        return false;
 
-    },
-    classExists:function (className) {
+        });
+         
+        return result; 
+    };
+
+    instance.prototype.show = function (inherit) {
+        ///	<summary>
+        /// Set 'display' style to 'block' or 'inherit'
+        ///	</summary>
+        ///	<param name="inherit" type="boolean">
+        /// Use 'inherit' instead of 'block'
+        ///	</param> 
+        ///	<returns type="this" />
+
+        this.forEach(function () {
+            get(this).style.display = inherit ? 'inherit' : 'block';
+        });
+
+        return this;
+    };
+
+    instance.prototype.hide = function () {
+        ///	<summary>
+        /// Set 'display' style to 'none'
+        ///	</summary> 
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+            get(this).style.display = 'none';
+        });
+        return this;
+    };
+
+    instance.prototype.classExists=function (className) {
         ///	<summary>
         /// Does css class already exists?
         ///	</summary>
@@ -681,8 +729,9 @@ SOFTWARE.
         });
 
         return result;
-    },
-    addClass:function (className) {
+    };
+
+    instance.prototype.addClass = function (className) {
         ///	<summary>
         /// Add a css class
         ///	</summary>
@@ -704,8 +753,9 @@ SOFTWARE.
         });
 
         return this;
-    },
-    removeClass:function (className) {
+    };
+
+    instance.prototype.removeClass = function (className) {
         ///	<summary>
         /// Remove CSS class
         ///	</summary>
@@ -721,8 +771,9 @@ SOFTWARE.
             }
         });
         return this;
-    },
-   replaceClass:function (originalClass, newClass) {
+    };
+
+    instance.prototype.replaceClass = function (originalClass, newClass) {
         ///	<summary>
         /// Replace a CSS class
         ///	</summary>
@@ -735,32 +786,189 @@ SOFTWARE.
         ///	<returns type="this" /> 
         this.removeClass(originalClass);
         this.addClass(newClass);
-    },
-    toggleClasses:function(fromClass, toClass) {
-            ///	<summary>
-            /// Toggle between two CSS classes
-            ///	</summary>
-            ///	<param name="fromClass" type="string">
-            /// CSS class name
-            ///	</param> 
-            ///	<param name="toClass" type="string">
-            /// CSS class name
-            ///	</param> 
-            ///	<returns type="this" /> 
-            this.forEach(function () {
+    };
 
-                if (sj(this).classExists(fromClass)) {
-                    sj(this).replaceClass(fromClass, toClass);
+    instance.prototype.toggleClasses = function(fromClass, toClass) {
+        ///	<summary>
+        /// Toggle between two CSS classes
+        ///	</summary>
+        ///	<param name="fromClass" type="string">
+        /// CSS class name
+        ///	</param> 
+        ///	<param name="toClass" type="string">
+        /// CSS class name
+        ///	</param> 
+        ///	<returns type="this" /> 
+        this.forEach(function () {
+
+            if (sj(this).classExists(fromClass)) {
+                sj(this).replaceClass(fromClass, toClass);
+            } else {
+                sj(this).replaceClass(toClass, fromClass);
+            }
+        });
+    };
+
+    instance.prototype.remove = function () {
+        ///	<summary>
+        ///	Remove element from DOM
+        ///	</summary>
+        this.forEach(function () {
+            this.parentNode.removeChild(this);
+        });
+        return this;
+    };
+
+    instance.prototype.removeChildren = function (selector) {
+        /// <signature>
+        ///	<summary>
+        ///	Remove all children nodes
+        ///	</summary> 
+        /// <returns type="this" /> 
+        /// </signature>
+        /// <signature>
+        ///	<summary>
+        ///	Remove all children nodes that match the selector
+        ///	</summary>
+        ///	<param name="selector" type="string">
+        /// Selection expression (ex. .className or ul.className)
+        ///	</param> 
+        /// <returns type="this" />  
+        /// </signature> 
+
+        this.forEach(function () {
+            if (get(this).hasChildNodes()) {
+                if (typeof selector === 'undefined') {
+                    while (get(this).childNodes.length >= 1) {
+                        get(this).removeChild(get(this).firstChild);
+                    }
                 } else {
-                    sj(this).replaceClass(toClass, fromClass);
+                    sj(this).children(selector, function (o) {
+                        sj(o).remove();
+                    });
                 }
+               
+            }
+        });
+
+    };
+
+    instance.prototype.children = function (selector, callback) {
+        /// <signature>
+        ///	<summary>
+        ///	Find child elements and return them as an array
+        ///	</summary>
+        ///	<param name="selector" type="string">
+        ///	 Selection expression (ex. .className or ul.className)
+        ///	</param>
+        /// <returns type="array" /> 
+        /// </signature>
+        /// <signature>
+        ///	<summary>
+        ///	Find child elements and return them as an array
+        ///	</summary>
+        ///	<param name="selector" type="string">
+        ///	 Selection expression (ex. .className or ul.className)
+        ///	</param>
+        ///	<param name="callback" type="function">
+        ///	 Callback function to process each child before adding it to the array.
+        ///	</param>
+        /// <returns type="array" />  
+        /// </signature> 
+        var o = [];
+                
+        if (this.me.length > 0) {
+            var ch = get(this.me[0]).querySelectorAll(selector);
+            for (var i = 0, max = ch.length; i < max; i++) {
+                if (typeof callback === 'function') {
+                    o.push(callback(ch[i]));
+                } else {
+                    o.push(ch[i]);
+                }
+                
+            }
+        } 
+        return o;
+    };
+
+    instance.prototype.select = function (selector) {
+        ///	<summary>
+        ///	Select elements and return them as an array of smalljs() objects
+        ///	</summary>
+        ///	<param name="selector" type="string">
+        ///	 Selection expression (ex. .className or ul.className)
+        ///	</param>
+        /// <returns type="array" />  
+        var r = [];
+        if (this.me.length > 0) {
+            r = sj(this.me[0]).children(selector, function (o) {
+                return sj(o);
             });
         }
-    }
 
-    );
+        return r;
+    };
 
+    instance.prototype.insertChildBefore = function (node) {
+        ///	<summary>
+        ///	Insert node before (this node)
+        ///	</summary>
+        ///	<param name="node" type="Node object">
+        ///	Required. The node object you want to insert
+        ///	</param>
+        /// <returns type="this" />  
+        this.forEach(function () {
+            var c = node.cloneNode(true);
+            this.parentNode.insertBefore(c, this); 
+        });
+        return this;
+    };
 
+    instance.prototype.insertChildAfter = function (node) {
+        ///	<summary>
+        ///	Insert node after (this node)
+        ///	</summary>
+        ///	<param name="node" type="Node object">
+        ///	Required. The node object you want to insert
+        ///	</param>
+        /// <returns type="this" />
+        this.forEach(function () {
+            this.parentNode.insertBefore(node, this.nextSibling);
+        });
+        return this;
+    };
+
+    instance.prototype.appendChild = function (node) {
+        ///	<summary>
+        ///	Shortcut to node.appendChild(node)
+        ///	</summary>
+        ///	<param name="node" type="Node object">
+        ///	Required. The node object you want to append
+        ///	</param>
+        /// <returns type="this" />
+        this.forEach(function () {
+            get(this).appendChild(node);
+        });
+        return this;
+    };
+
+    instance.prototype.clone = function (deep) {
+        ///	<summary>
+        ///	Abstracting cloneNode(true)
+        ///	</summary>
+        ///	<param name="deep" type="boolean">
+        ///	True if the children of the node should also be cloned, or false to clone only the specified node.
+        ///	</param>
+        /// <returns type="clone" />
+        if (this.me.length > 0) {
+            if (!isDefined(deep)) {
+                deep = true;
+            }
+            return $(this.me[0]).cloneNode(deep);
+        }
+        return null;
+    };
+     
     if (!global.smalljs) {
         global.smalljs = global['smalljs'] = sj;
     }
