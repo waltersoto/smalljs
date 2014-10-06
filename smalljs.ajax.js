@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-(function (document, global, smalljs, get) {
+(function (window, smalljs) {
 
     function isDefined(o) { return typeof o !== 'undefined'; }
     function isFunction(f){ return typeof f === 'function'; }
@@ -209,13 +209,11 @@ SOFTWARE.
                         req.onError("0", "Browser doesn't support ajax");
                     } 
                 }
-            }
-   
-                   
+            }           
     }
 
     smalljs.extend({
         ajax:call
     });
 
-})(document, window, smalljs, smalljs.get);
+})(window,smalljs);

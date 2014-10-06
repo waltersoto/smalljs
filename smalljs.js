@@ -208,7 +208,6 @@ SOFTWARE.
     });
 
     sj.extend({
-
             onload: function (callback) {
                 ///	<summary>
                 /// Execute multiple functions in the window.onload method.
