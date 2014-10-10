@@ -474,7 +474,7 @@ SOFTWARE.
         ///	</summary>
         /// <param name="name" type="string">Attribute name</param>
         this.forEach(function () {
-            $(this).removeAttribute(name);
+            get(this).removeAttribute(name);
         });
     };
 
@@ -937,6 +937,16 @@ SOFTWARE.
         return this;
     };
 
+    instance.prototype.hasChildNodes = function () {
+        ///	<summary>
+        ///	Does the DOM element has child nodes?
+        ///	</summary>
+        if (this.me.length > 0) {
+            return get(this.me[0]).hasChildNodes();
+        }
+        return false;
+    };
+
     instance.prototype.appendChild = function (node) {
         ///	<summary>
         ///	Shortcut to node.appendChild(node)
@@ -963,7 +973,7 @@ SOFTWARE.
             if (!isDefined(deep)) {
                 deep = true;
             }
-            return $(this.me[0]).cloneNode(deep);
+            return get(this.me[0]).cloneNode(deep);
         }
         return null;
     };
