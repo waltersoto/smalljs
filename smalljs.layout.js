@@ -25,6 +25,41 @@ SOFTWARE.
 
 
     smalljs.extend({
+        animate: function (params) {
+            ///	<summary>
+            ///	Animation loop
+            ///	</summary>
+            ///	<param name="params" type="object">
+            /// {
+            ///     start:0,
+            ///     end:100,
+            ///     duration:500,
+            ///     onStep:function(i){},
+            ///     callback:function(){} //Executes until animation ends,
+            ///     animation:(ex. function easeIn(tick){ Math.pow(tick, 0.1 * 2) }), 
+            /// }
+            ///	</param> 
+            var duration = params.duration | 500,
+             start = params.start,
+             end = params.end,
+             started = new Date(),
+             id = setInterval(function () {
+                 var progress = ((new Date() - started) / duration) > 1 ? 1 : (new Date() - started) / duration;
+                 var diff = progress;
+                 if (typeof (params.animation) === 'function') {
+                     diff = params.animation(progress);
+                 }
+                 var tick = Math.round((diff * (end - start)) + start);
+                 params.onStep(tick);
+                 if (progress === 1) {
+                     if (typeof (params.callback) === 'function') {
+                         params.callback();
+                     }
+                     clearInterval(id);
+                 }
+             }, 1);
+
+        },
         document: {
             width: function () {
                 ///<summary>

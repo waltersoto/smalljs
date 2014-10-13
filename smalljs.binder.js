@@ -33,13 +33,16 @@ SOFTWARE.
    var binder = {
         sources: {},
         addSource: function (source) {
+            ///	<summary>
+            /// Add sources to the binder
+            ///	</summary> 
+            /// <param name="source" type="json">{ array:[], array2:[], arrayN:[] }</param> 
             var p = null;
             for (p in source) {
                 if (typeof (source[p]) !== 'undefined') {
                     this.sources[p] = source[p];
                 }
             }
-            return this;
         },
         readPattern:function(txt){
               
@@ -52,18 +55,33 @@ SOFTWARE.
             return o;
         },
         apply: function () {
+            ///	<summary>
+            /// Apply binder
+            ///	</summary> 
             this.model();
             this.repeater();
         },
         updateSource: function (name, source) {
+            ///	<summary>
+            /// Update sources
+            ///	</summary> 
+            /// <param name="name" type="string">Source array name</param> 
+            /// <param name="source" type="json">{ array:[] }</param>
             this.sources[name] = source;
             this.apply();
         },
         removeSource: function (name) {
+            ///	<summary>
+            /// Delete resource
+            ///	</summary> 
+            /// <param name="name" type="string">Source array name</param> 
             delete binder.sources[name];
             this.apply();
         },
         model: function () {
+            ///	<summary>
+            /// Bind a module
+            ///	</summary> 
             (function ($) {
                 for (var p in $.sources) {
                     if ($.sources[p].constructor !== Array) {
@@ -78,6 +96,9 @@ SOFTWARE.
             })(binder);
         },
         repeater: function () {
+            ///	<summary>
+            /// Bind a repeater
+            ///	</summary>
             (function ($) {
                 sj('[cloned]').remove();
 

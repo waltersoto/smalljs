@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-(function (smalljs) {
+(function (sj) {
 
     var remove = function (text) {
         return text.replace(/[^a-zA-Z 0-9 ,.-]+/g, '');
@@ -29,9 +29,9 @@ SOFTWARE.
 
     var noChars = function () {
 
-        smalljs('[nochars]').forEach(function () {
+        sj('[nochars]').forEach(function () {
             (function (o) {
-                smalljs(o).addEvent('keyup', function () {
+                sj(o).addEvent('keyup', function () {
                     o.value = remove(o.value);
                 });
             })(this);
@@ -40,15 +40,15 @@ SOFTWARE.
     };
 
 
-    smalljs.plugin({
+    sj.plugin({
         removeSpecialChars: function () {
             this.forEach(function () {
-                smalljs(this).text(remove($(this).text()));
+                sj(this).text(remove($(this).text()));
             });
         }
     });
 
-    smalljs.extend({
+    sj.extend({
         noSpecialChars:noChars
     });
 

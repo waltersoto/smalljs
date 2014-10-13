@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-(function (document, global) {
+(function (document, window) {
     if (!document.querySelectorAll) {
         //for IE6,IE7 compatibility include any of the following libraries:
         if (window.Sizzle) {
@@ -259,6 +259,59 @@ SOFTWARE.
                     this.onload(callback);
                 }
             },
+            wait: function (delay, fn) {
+                ///<summary>
+                /// Execute a function after a delay
+                ///</summary>
+                ///<param name="delay" type="milliseconds">
+                /// Time to wait
+                ///</param>
+                ///<param name="fn" type="function">
+                /// Function to execute after the delay
+                ///</param>
+                if (!isDefined(delay)) {
+                    delay = 1000;
+                }
+                window.setTimeout(function () {
+                   if (typeof (fn) === 'function') {
+                      fn();
+                   }
+                }, delay);
+            }, 
+            queryString: function (key) {
+                ///<summary>
+                /// Ready querystring value
+                ///</summary>
+                ///<param name="key" type="string">
+                /// Querystring parameter name
+                ///</param>
+                ///	<returns type="string" /> 
+                var args = window.location.href.split("?");
+                if (args.length === 2) {
+                    var arg;
+                    if (args[1].indexOf("&") !== -1) {
+                        arg = args[1].split("&");
+                        if (arg.length > 0) {
+                            for (var i = 0, m = arg.length; i < m; i++) {
+                                var sArg = arg[i].split("=");
+                                if (sArg.length > 0) {
+                                    if ((sArg[0] == key)) {
+                                        return sArg[1];
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        arg = args[1].split("=");
+                        if (arg.length > 0) {
+                            if ((arg[0] === key)) {
+                                return arg[1];
+                            }
+                        }
+                    }
+                }
+                return "";
+            }
 
         });
     
@@ -978,12 +1031,12 @@ SOFTWARE.
         return null;
     };
      
-    if (!global.smalljs) {
-        global.smalljs = global['smalljs'] = sj;
+    if (!window.smalljs) {
+        window.smalljs = window['smalljs'] = sj;
     }
     //alias
-    if (!global.sj) {
-        global.sj = global['sj'] = sj;
+    if (!window.sj) {
+        window.sj = window['sj'] = sj;
     }
     
 
