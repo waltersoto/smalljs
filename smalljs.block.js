@@ -55,8 +55,8 @@ SOFTWARE.
                     var name = nodes[i].attributes.getNamedItem('blk-prop').value;
                     var value = '';
                     switch (nodes[i].tagName.toLowerCase()) {
-                        case "textarea":
-                        case "input": value = nodes[i].value;
+                        case 'textarea':
+                        case 'input': value = nodes[i].value;
                             break;
                         default:
                             if (typeof (nodes[i].innerHTML) !== 'undefined') {
@@ -83,8 +83,8 @@ SOFTWARE.
                     var element = container.querySelectorAll('[blk-prop=' + p + ']');
                     if (typeof element !== 'undefined' && element.length > 0) {
                         switch (element[0].tagName.toLowerCase()) {
-                            case "textarea":
-                            case "input": element[0].value = json[p];
+                            case 'textarea':
+                            case 'input': element[0].value = json[p];
                                 break;
                             default:
                                 if (typeof (element[0].innerHTML) !== 'undefined') {

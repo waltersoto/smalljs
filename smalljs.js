@@ -40,7 +40,7 @@ SOFTWARE.
         return str.indexOf(substring) != -1;
     }
     function trim(str) {
-        return str.replace(/^\s+|\s+$/g, "");
+        return str.replace(/^\s+|\s+$/g, '');
     }
 
     var get = function () {
@@ -108,7 +108,7 @@ SOFTWARE.
     function instance(plugins) {
         this.me = plugins.me;
         if (!(this instanceof instance)) {
-            throw new Error("Constructor called as a function");
+            throw new Error('Constructor called as a function');
         }
         //Include plugins if any
         if (isDefined(plugins)) {
@@ -346,13 +346,13 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this)) {
                 if (this.addEventListener) {
-                    if (event.substring(0, 2) === "on") {
+                    if (event.substring(0, 2) === 'on') {
                         event = event.substring(2);
                     }
                     this.addEventListener(event, callback, false);
                 } else if (this.attachEvent) {
                     if (event.length > 2) {
-                        if (event.substring(0, 2) !== "on") {
+                        if (event.substring(0, 2) !== 'on') {
                             event = 'on' + event;
                         }
                     }
@@ -378,13 +378,13 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this)) {
                 if (this.removeEventListener) {
-                    if (event.substring(0, 2) === "on") {
+                    if (event.substring(0, 2) === 'on') {
                         event = event.substring(2);
                     }
                     this.removeEventListener(event, callback, false);
                 } else if (this.detachEvent) {
                     if (event.length > 2) {
-                        if (event.substring(0, 2) !== "on") {
+                        if (event.substring(0, 2) !== 'on') {
                             event = 'on' + event;
                         }
                     }
@@ -626,7 +626,7 @@ SOFTWARE.
         ///	</summary> 
         ///	<returns type="Boolean" /> 
         var r = false;
-        this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length == 0; });
+        this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, '').length == 0; });
         return r;
     };
  

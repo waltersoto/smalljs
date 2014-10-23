@@ -62,15 +62,15 @@ SOFTWARE.
                 for (var i = 0, m = f.elements.length; i < m; i++) {
                     if (typeof (f.elements[i].name) !== 'undefined') {
                         var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
-                        if (f.elements[i].type === "select-multiple" || f.elements[i].type === "select-one") {
+                        if (f.elements[i].type === 'select-multiple' || f.elements[i].type === 'select-one') {
                             for (var o = 0; o < f.elements[i].options.length; o++) {
                                 f.elements[i].options[o].selected = false;
                             }
-                        } else if (f.elements[i].type === "checkbox" || f.elements[i].type === "radio") {
+                        } else if (f.elements[i].type === 'checkbox' || f.elements[i].type === 'radio') {
                             f.elements[i].checked = false;
                         } else {
-                            if (f.elements[i].type !== "button" && f.elements[i].type !== "submit") {
-                                f.elements[i].value = "";
+                            if (f.elements[i].type !== 'button' && f.elements[i].type !== 'submit') {
+                                f.elements[i].value = '';
                             }
                         }
                     }
@@ -96,14 +96,14 @@ SOFTWARE.
                 for (var i = 0, m = f.elements.length; i < m; i++) {
                     if (typeof (f.elements[i].name) !== 'undefined') {
                         var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
-                        if (f.elements[i].type === "select-multiple" || f.elements[i].type === "select-one") {
+                        if (f.elements[i].type === 'select-multiple' || f.elements[i].type === 'select-one') {
                             items[name] = readOption(f.elements[i]);
-                        } else if (f.elements[i].type === "checkbox" || f.elements[i].type === "radio") {
+                        } else if (f.elements[i].type === 'checkbox' || f.elements[i].type === 'radio') {
                             if (f.elements[i].checked) {
                                 items[name] = f.elements[i].value;
                             }
                         } else {
-                            if (f.elements[i].type !== "button" && f.elements[i].type !== "submit") {
+                            if (f.elements[i].type !== 'button' && f.elements[i].type !== 'submit') {
                                 items[name] = f.elements[i].value;
                             }
                         }

@@ -30,10 +30,10 @@ SOFTWARE.
             var xmlDoc;
             if (window.DOMParser) {
                 xmlParser = new DOMParser();
-                xmlDoc = xmlParser.parseFromString(text, "text/xml");
+                xmlDoc = xmlParser.parseFromString(text, 'text/xml');
             } else { // Internet Explorer
-                xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-                xmlDoc.async = "false";
+                xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
+                xmlDoc.async = 'false';
                 xmlDoc.loadXML(text);
             }
             return xmlDoc;
@@ -45,13 +45,13 @@ SOFTWARE.
             return new XMLHttpRequest();
         } else {//IE 5,6
             try {
-                return new ActiveXObject("'Msxml2.XMLHTTP.6.0'");
+                return new ActiveXObject('Msxml2.XMLHTTP.6.0');
             } catch (e) {
                 try {
                     return new ActiveXObject('Msxml2.XMLHTTP.3.0');
                 } catch (e2) {
                     try {
-                        return new ActiveXObject("Microsoft.XMLhttp");
+                        return new ActiveXObject('Microsoft.XMLhttp');
                     } catch (ex) {
                         return null; //Browser doesn't support ajax
                     }
@@ -135,12 +135,12 @@ SOFTWARE.
         ///	</param> 
     
             if (isDefined(req.url)) { 
-                var format = isDefined(req.resultType) ? req.resultType : "JSON",parameters = '';
+                var format = isDefined(req.resultType) ? req.resultType : 'JSON',parameters = '';
                 if (isDefined(req.data)) {
                     parameters = getParameters(req.data, req.url,
                     (isDefined(req.encode) ? true : false));
                 }
-                var req_method = isDefined(req.method) ? req.method : "Post";
+                var req_method = isDefined(req.method) ? req.method : 'Post';
                 var xH = request();
 
                 if (xH !== null) {
@@ -184,13 +184,13 @@ SOFTWARE.
                     var params = null, reqUrl = req.url;
                      
                     //Get
-                    if (req_method.toLowerCase() === "get") {
+                    if (req_method.toLowerCase() === 'get') {
                         reqUrl += parameters;
-                    } else if (req_method.toLowerCase() === "post") {
+                    } else if (req_method.toLowerCase() === 'post') {
                         params = parameters.replace('?', '');
                     }
                   
-                    var contentType = isDefined(req.contentType) ? req.contentType : "application/x-www-form-urlencoded";
+                    var contentType = isDefined(req.contentType) ? req.contentType : 'application/x-www-form-urlencoded';
                     if (isDefined(req.timeout)) {
                         xH.timeout = req.timeout; 
                     }
@@ -198,7 +198,7 @@ SOFTWARE.
                         xH.ontimeout = req.onTimeout;
                     }
                     xH.open(req_method, reqUrl, true);
-                    xH.setRequestHeader("Content-type", contentType);
+                    xH.setRequestHeader('Content-Type', contentType);
                     if (contentType.toUpperCase() === 'JSON') {
                         xH.send(JSON.stringify(req.data));
                     } else {
@@ -206,7 +206,7 @@ SOFTWARE.
                     }
                 } else { 
                     if (isFunction(req.onError)) {
-                        req.onError("0", "Browser doesn't support ajax");
+                        req.onError('0', 'Browser does not support ajax');
                     } 
                 }
             }           
