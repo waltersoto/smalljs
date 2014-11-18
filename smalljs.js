@@ -763,6 +763,9 @@ SOFTWARE.
         return this;
     };
 
+    var startClass = '(?:^|\\s)';
+    var endClass = '(?!\\S)'
+
     instance.prototype.classExists=function (className) {
         ///	<summary>
         /// Does css class already exists?
@@ -776,7 +779,7 @@ SOFTWARE.
         this.forEach(function () {
             var i = get(this);
             if (isDefined(i)) {
-                result = new RegExp('(?:^|\\s)' + className + '(?!\\S)').test(i.className);
+                result = new RegExp(startClass + className + endClass).test(i.className);
             }
         });
 
@@ -806,7 +809,7 @@ SOFTWARE.
 
         return this;
     };
-
+     
     instance.prototype.removeClass = function (className) {
         ///	<summary>
         /// Remove CSS class
@@ -818,7 +821,7 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this.className)) {
                 if (sj(this).classExists(className)) {
-                    this.className = this.className.replace(new RegExp('(?:^|\\s)' + className + '(?!\\S)'), '');
+                    this.className = this.className.replace(new RegExp(startClass + className + endClass), '');
                 }
             }
         });
@@ -886,8 +889,7 @@ SOFTWARE.
         /// Selection expression (ex. .className or ul.className)
         ///	</param> 
         /// <returns type="this" />  
-        /// </signature> 
-
+        /// </signature>  
         this.forEach(function () {
             if (get(this).hasChildNodes()) {
                 if (typeof selector === 'undefined') {
