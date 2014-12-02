@@ -31,7 +31,7 @@ SOFTWARE.
             if (window.DOMParser) {
                 xmlParser = new DOMParser();
                 xmlDoc = xmlParser.parseFromString(text, 'text/xml');
-            } else { // Internet Explorer
+            } else {
                 xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
                 xmlDoc.async = 'false';
                 xmlDoc.loadXML(text);
@@ -110,6 +110,16 @@ SOFTWARE.
         return list;
     }
 
+    //Constants
+    var METHOD_POST = 'POST',
+        METHOD_GET = 'GET',
+        METHOD_HEADER = 'HEADER',
+        RESULT_JSON = 'JSON',
+        RESULT_STRING = 'STRING',
+        RESULT_XML = 'XML',
+        RESULT_STATUS = 'STATUS',
+        DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+
     function  call(req) {
         ///	<summary>
         ///	Perform an Ajax call
@@ -135,12 +145,12 @@ SOFTWARE.
         ///	</param> 
     
             if (isDefined(req.url)) { 
-                var format = isDefined(req.resultType) ? req.resultType : 'JSON',parameters = '';
+                var format = isDefined(req.resultType) ? req.resultType : RESULT_JSON ,parameters = '';
                 if (isDefined(req.data)) {
                     parameters = getParameters(req.data, req.url,
                     (isDefined(req.encode) ? true : false));
                 }
-                var req_method = isDefined(req.method) ? req.method : 'Post';
+                var req_method = isDefined(req.method) ? req.method : METHOD_POST;
                 var xH = request();
 
                 if (xH !== null) {
@@ -150,16 +160,16 @@ SOFTWARE.
                                 var result = "";
                                 var status = xH.status;
                                 switch (format.toString().toUpperCase()) {
-                                    case 'STRING': result = xH.responseText; //Text
+                                    case RESULT_STRING: result = xH.responseText; //Text
                                         break;
-                                    case 'XML': result = xml.parse(xH.responseText);
+                                    case RESULT_XML: result = xml.parse(xH.responseText);
                                         break;
-                                    case 'JSON': result = xH.responseText;
+                                    case RESULT_JSON: result = xH.responseText;
                                         if (typeof (JSON) !== 'undefined') {
                                             result = JSON.parse(result);
                                         }
                                         break;
-                                    case 'STATUS': result = status;
+                                    case RESULT_STATUS: result = status;
                                         break;
                                     default: result = xH.responseText;
                                         break;
@@ -184,13 +194,13 @@ SOFTWARE.
                     var params = null, reqUrl = req.url;
                      
                     //Get
-                    if (req_method.toLowerCase() === 'get') {
+                    if (req_method.toUpperCase() === METHOD_GET) {
                         reqUrl += parameters;
-                    } else if (req_method.toLowerCase() === 'post') {
+                    } else if (req_method.toUpperCase() === METHOD_POST) {
                         params = parameters.replace('?', '');
                     }
                   
-                    var contentType = isDefined(req.contentType) ? req.contentType : 'application/x-www-form-urlencoded';
+                    var contentType = isDefined(req.contentType) ? req.contentType : DEFAULT_CONTENT_TYPE;
                     if (isDefined(req.timeout)) {
                         xH.timeout = req.timeout; 
                     }
@@ -199,7 +209,7 @@ SOFTWARE.
                     }
                     xH.open(req_method, reqUrl, true);
                     xH.setRequestHeader('Content-Type', contentType);
-                    if (contentType.toUpperCase() === 'JSON') {
+                    if (contentType.toUpperCase() === RESULT_JSON) {
                         xH.send(JSON.stringify(req.data));
                     } else {
                         xH.send(params);
