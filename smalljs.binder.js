@@ -39,7 +39,11 @@ SOFTWARE.
     };
 
     var ATT = {
-        BIND:''
+        BIND: 'sj-bind',
+        CLONED: 'sj-cloned',
+        REPEAT: 'sj-repeat',
+        NO_CHILDREN: 'sj-no-children',
+        TEMPLATE: 'sj-template'
     };
 
    var binder = {
@@ -97,10 +101,10 @@ SOFTWARE.
             (function ($) {
                 for (var p in $.sources) {
                     if ($.sources[p].constructor !== Array) {
-                        sj('[sj-bind*=' + p + ']').forEach(function () {
-                            var att = sj(this).att('sj-bind');
+                        sj('[' + ATT.BIND + '*=' + p + ']').forEach(function () {
+                            var att = sj(this).att(ATT.BIND);
                             att = att.replace(p + '.', '');
-                            sj(this).att('no-children', true);
+                            sj(this).att(ATT.NO_CHILDREN, true);
                             sj(this).text($.sources[p][att]);
                         });
                     }
@@ -112,10 +116,10 @@ SOFTWARE.
             /// Bind a repeater
             ///	</summary>
             (function ($) {
-                sj('[sj-cloned]').remove();
+                sj('['+ATT.CLONED+']').remove();
 
-                sj('[sj-repeat]').forEach(function () { 
-                    if (sj(this).checkAtt('no-children')) { 
+                sj('[' + ATT.REPEAT + ']').forEach(function () {
+                    if (sj(this).checkAtt(ATT.NO_CHILDREN)) {
                         if (this.tagName === TAG.DIV || this.tagName === TAG.SPAN || this.tagName === TAG.PARAGRAPH) {
                             sj(this).removeChildren();
                         }  
@@ -133,8 +137,8 @@ SOFTWARE.
                         }
                     }
 
-                    var data = sj(this).att('sj-repeat');
-                    var temp = sj(this).att('sj-repeat');
+                    var data = sj(this).att(ATT.REPEAT);
+                    var temp = sj(this).att(ATT.REPEAT);
 
                     var prop = [];
                     if (contains(data,'.')) {
@@ -170,7 +174,7 @@ SOFTWARE.
                             for (var p in d[copyCounter]) { 
                                 if (sj(this).hasChildNodes() && this.tagName !== TAG.ANCHOR && copy.hasChildNodes()) {
                                     if (isNaN(p)) {
-                                        var list = sj(copy).children('[sj-bind=' + p + ']'); 
+                                        var list = sj(copy).children('[' + ATT.BIND + '=' + p + ']');
                                         for (var l = 0, lmax = list.length; l < lmax; l++)
                                         {
                                             if (list[l].tagName === TAG.IMAGE) {
@@ -216,7 +220,7 @@ SOFTWARE.
                                     }
                                     //Check for wildcard binds
                                     //Ex. <div sj-template='true' onclick='alert({id})'>{name}</div>
-                                    var cmdList = sj(copy).children('[sj-template]');
+                                    var cmdList = sj(copy).children('['+ATT.TEMPLATE+']');
                                     for (var cmd = 0, cmdMax = cmdList.length; cmd < cmdMax; cmd++) {
                                         //Read patterns
                                         if (cmdList[cmd].attributes.length > 0) {
@@ -250,11 +254,11 @@ SOFTWARE.
                                     }
                                 } else {
                                     if (!sj(this).hasChildNodes()) {
-                                        sj(this).att('no-children', true);
+                                        sj(this).att(ATT.NO_CHILDREN, true);
                                     } else {
                                         if (prop.length == 0) {
-                                            if (!sj(copy).hasChildNodes() && sj(copy).checkAtt('sj-bind')) {
-                                                prop.push(sj(copy).att('sj-bind'));
+                                            if (!sj(copy).hasChildNodes() && sj(copy).checkAtt(ATT.BIND)) {
+                                                prop.push(sj(copy).att(ATT.BIND));
                                             }
                                         }
                                     }
@@ -303,9 +307,9 @@ SOFTWARE.
                     }
 
                     for (var a = 0, max = arr.length; a < max; a++) {
-                        if (arr[a].tagName === 'IMG' || arr[a].tagName === 'A') {
+                        if (arr[a].tagName === TAG.IMAGE || arr[a].tagName === TAG.ANCHOR) {
                             sj(this).displayOff();
-                            sj(arr[a]).att('sj-cloned', true); 
+                            sj(arr[a]).att(ATT.CLONED, true); 
                             sj(this).insertChildAfter(arr[a]);
                         } else {
                             sj(this).appendChild(arr[a]);
