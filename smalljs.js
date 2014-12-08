@@ -33,14 +33,20 @@ SOFTWARE.
         }
     }
 
+    var UNDEFINED = 'undefined', FUNCTION = 'function';
+
     function isDefined(o) {
-        return typeof o !== 'undefined';
+        return typeof o !== UNDEFINED;
     }
     function contains(str,substring) {
         return str.indexOf(substring) != -1;
     }
     function trim(str) {
         return str.replace(/^\s+|\s+$/g, '');
+    }
+
+    function fooVal(expression) {
+        new Function("return " + expression)();
     }
 
     var get = function () {
@@ -216,10 +222,10 @@ SOFTWARE.
                 /// Function to execute.
                 ///	</param>
                 var cur = window.onload;
-                if (typeof window.onload !== 'function') {
+                if (typeof window.onload !== FUNCTION) {
                     window.onload = callback;
                 } else {
-                    if (typeof callback === 'function') {
+                    if (typeof callback === FUNCTION) {
                         window.onload = function () {
                             if (cur) {
                                 cur();
@@ -236,7 +242,7 @@ SOFTWARE.
                 ///	<param name="callback" type="function">
                 /// Function to execute.
                 ///	</param>
-                if (typeof onReady !== 'function') {
+                if (typeof onReady !== FUNCTION) {
                     onReady = callback;
                 } else {
                     var current = onReady;
@@ -273,7 +279,7 @@ SOFTWARE.
                     delay = 1000;
                 }
                 window.setTimeout(function () {
-                   if (typeof (fn) === 'function') {
+                    if (typeof (fn) === FUNCTION) {
                       fn();
                    }
                 }, delay);
@@ -325,7 +331,7 @@ SOFTWARE.
         ///	</param>
         ///	<returns type="this" />
         for (var i = 0, m = this.me.length; i < m; i++) {
-            if (typeof fn === 'function') {
+            if (typeof fn === FUNCTION) {
                 fn.call(this.me[i]);
             }
         }
@@ -565,7 +571,7 @@ SOFTWARE.
         /// </signature>
 
         var result = [];
-        var returnVal = (typeof content === 'undefined');
+        var returnVal = (typeof content === UNDEFINED);
 
         this.forEach(function () {
             var t = this;
@@ -892,7 +898,7 @@ SOFTWARE.
         /// </signature>  
         this.forEach(function () {
             if (get(this).hasChildNodes()) {
-                if (typeof selector === 'undefined') {
+                if (typeof selector === UNDEFINED) {
                     while (get(this).childNodes.length >= 1) {
                         get(this).removeChild(get(this).firstChild);
                     }
@@ -934,7 +940,7 @@ SOFTWARE.
         if (this.me.length > 0) {
             var ch = get(this.me[0]).querySelectorAll(selector);
             for (var i = 0, max = ch.length; i < max; i++) {
-                if (typeof callback === 'function') {
+                if (typeof callback === FUNCTION) {
                     o.push(callback(ch[i]));
                 } else {
                     o.push(ch[i]);

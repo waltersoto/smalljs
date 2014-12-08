@@ -23,7 +23,18 @@ SOFTWARE.
 */
 (function (window, smalljs) {
 
-    function isDefined(o) { return typeof o !== 'undefined'; }
+       //Constants
+    var METHOD_POST = 'POST',
+        METHOD_GET = 'GET',
+        METHOD_HEADER = 'HEADER',
+        RESULT_JSON = 'JSON',
+        RESULT_STRING = 'STRING',
+        RESULT_XML = 'XML',
+        RESULT_STATUS = 'STATUS',
+        DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded',
+        UNDEFINED = 'undefined';
+
+    function isDefined(o) { return typeof o !== UNDEFINED; }
     function isFunction(f){ return typeof f === 'function'; }
 
      function parseXml(text) { 
@@ -110,15 +121,7 @@ SOFTWARE.
         return list;
     }
 
-    //Constants
-    var METHOD_POST = 'POST',
-        METHOD_GET = 'GET',
-        METHOD_HEADER = 'HEADER',
-        RESULT_JSON = 'JSON',
-        RESULT_STRING = 'STRING',
-        RESULT_XML = 'XML',
-        RESULT_STATUS = 'STATUS',
-        DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded';
+ 
 
     function  call(req) {
         ///	<summary>
@@ -165,7 +168,7 @@ SOFTWARE.
                                     case RESULT_XML: result = xml.parse(xH.responseText);
                                         break;
                                     case RESULT_JSON: result = xH.responseText;
-                                        if (typeof (JSON) !== 'undefined') {
+                                        if (typeof (JSON) !== UNDEFINED) {
                                             result = JSON.parse(result);
                                         }
                                         break;

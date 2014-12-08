@@ -25,8 +25,19 @@ SOFTWARE.
 
     var f = null;
 
+    var UNDEFINED = 'undefined';
+
+    var FORM_TYPE = {
+        SELECT_MULTIPLE: 'select-multiple',
+        SELECT_ONE: 'select-one',
+        CHECKBOX: 'checkbox',
+        RADIO: 'radio',
+        SUBMIT: 'submit',
+        BUTTON: 'button'
+    };
+
     function isDefined(o) {
-        return o !== null && typeof o !== 'undefined';
+        return o !== null && typeof o !== UNDEFINED;
     }
 
     function readOption(o) {
@@ -60,16 +71,16 @@ SOFTWARE.
             ///	</summary> 
             if (isDefined(f)) {
                 for (var i = 0, m = f.elements.length; i < m; i++) {
-                    if (typeof (f.elements[i].name) !== 'undefined') {
+                    if (typeof (f.elements[i].name) !== UNDEFINED) {
                         var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
-                        if (f.elements[i].type === 'select-multiple' || f.elements[i].type === 'select-one') {
+                        if (f.elements[i].type === FORM_TYPE.SELECT_MULTIPLE || f.elements[i].type === FORM_TYPE.SELECT_ONE) {
                             for (var o = 0; o < f.elements[i].options.length; o++) {
                                 f.elements[i].options[o].selected = false;
                             }
-                        } else if (f.elements[i].type === 'checkbox' || f.elements[i].type === 'radio') {
+                        } else if (f.elements[i].type === FORM_TYPE.CHECKBOX || f.elements[i].type === FORM_TYPE.RADIO) {
                             f.elements[i].checked = false;
                         } else {
-                            if (f.elements[i].type !== 'button' && f.elements[i].type !== 'submit') {
+                            if (f.elements[i].type !== FORM_TYPE.BUTTON && f.elements[i].type !== FORM_TYPE.SUBMIT) {
                                 f.elements[i].value = '';
                             }
                         }
@@ -94,16 +105,16 @@ SOFTWARE.
             var items = {};
             if (isDefined(f)) {
                 for (var i = 0, m = f.elements.length; i < m; i++) {
-                    if (typeof (f.elements[i].name) !== 'undefined') {
+                    if (typeof (f.elements[i].name) !== UNDEFINED) {
                         var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
-                        if (f.elements[i].type === 'select-multiple' || f.elements[i].type === 'select-one') {
+                        if (f.elements[i].type === FORM_TYPE.SELECT_MULTIPLE || f.elements[i].type === FORM_TYPE.SELECT_ONE) {
                             items[name] = readOption(f.elements[i]);
-                        } else if (f.elements[i].type === 'checkbox' || f.elements[i].type === 'radio') {
+                        } else if (f.elements[i].type === FORM_TYPE.CHECKBOX || f.elements[i].type === FORM_TYPE.RADIO) {
                             if (f.elements[i].checked) {
                                 items[name] = f.elements[i].value;
                             }
                         } else {
-                            if (f.elements[i].type !== 'button' && f.elements[i].type !== 'submit') {
+                            if (f.elements[i].type !== FORM_TYPE.BUTTON && f.elements[i].type !== FORM_TYPE.SUBMIT) {
                                 items[name] = f.elements[i].value;
                             }
                         }
@@ -130,7 +141,7 @@ SOFTWARE.
         form:sjForm
     });
 
-    if (typeof global !== 'undefined') {
+    if (typeof global !== UNDEFINED) {
         if (!global.sjForm) {
             window.sjForm = sjForm;
         }

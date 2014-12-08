@@ -23,11 +23,23 @@ SOFTWARE.
 */
 (function (smalljs,global) {
 
+    var ATT = {
+        BLOCK: 'block',
+        PROPERTY:'blk-prop'
+    };
+
+    var TAG = {
+        INPUT: 'input',
+        TEXT_AREA: 'textarea'
+    }
+
+    var UNDEFINED = 'undefined'
+
     var setName = '';
     var fn = function (name) {
         var getNode = function (name) {
-            var nodes = document.querySelectorAll('[block=' + name + ']');
-            if (typeof nodes !== 'undefined' && nodes.length > 0) {
+            var nodes = document.querySelectorAll('['+ATT.BLOCK+'=' + name + ']');
+            if (typeof nodes !== UNDEFINED && nodes.length > 0) {
                 return nodes[0];
             }
             return null;
@@ -37,7 +49,7 @@ SOFTWARE.
             var list = null;
             var container = getNode(setName);
             if (container !== null) {
-                list = container.querySelectorAll('[blk-prop]');
+                list = container.querySelectorAll('['+ATT.PROPERTY+']');
             }
             return list;
         };
@@ -52,14 +64,14 @@ SOFTWARE.
             var nodes = getNodeProperties(setName);
             if (typeof nodes !== null && nodes.length > 0) {
                 for (var i = 0; i < nodes.length; i++) {
-                    var name = nodes[i].attributes.getNamedItem('blk-prop').value;
+                    var name = nodes[i].attributes.getNamedItem(ATT.PROPERTY).value;
                     var value = '';
                     switch (nodes[i].tagName.toLowerCase()) {
-                        case 'textarea':
-                        case 'input': value = nodes[i].value;
+                        case TAG.TEXT_AREA:
+                        case TAG.INPUT: value = nodes[i].value;
                             break;
                         default:
-                            if (typeof (nodes[i].innerHTML) !== 'undefined') {
+                            if (typeof (nodes[i].innerHTML) !== UNDEFINED) {
                                 value = nodes[i].innerHTML;
                             }
 
@@ -78,16 +90,16 @@ SOFTWARE.
             var container = getNode(setName);
 
             for (p in json) {
-                if (typeof (json[p]) !== 'undefined') {
+                if (typeof (json[p]) !== UNDEFINED) {
 
-                    var element = container.querySelectorAll('[blk-prop=' + p + ']');
-                    if (typeof element !== 'undefined' && element.length > 0) {
+                    var element = container.querySelectorAll('[' + ATT.PROPERTY + '=' + p + ']');
+                    if (typeof element !== UNDEFINED && element.length > 0) {
                         switch (element[0].tagName.toLowerCase()) {
-                            case 'textarea':
-                            case 'input': element[0].value = json[p];
+                            case TAG.TEXT_AREA:
+                            case TAG.INPUT: element[0].value = json[p];
                                 break;
                             default:
-                                if (typeof (element[0].innerHTML) !== 'undefined') {
+                                if (typeof (element[0].innerHTML) !== UNDEFINED) {
                                     element[0].innerHTML = json[p];
                                 }
 

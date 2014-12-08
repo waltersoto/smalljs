@@ -23,6 +23,7 @@ SOFTWARE.
 */
 (function (document, global, smalljs, get) {
 
+    var FUNCTION = 'function', UNDEFINED = 'undefined';
 
     smalljs.extend({
         animate: function (params) {
@@ -46,13 +47,13 @@ SOFTWARE.
              id = setInterval(function () {
                  var progress = ((new Date() - started) / duration) > 1 ? 1 : (new Date() - started) / duration;
                  var diff = progress;
-                 if (typeof (params.animation) === 'function') {
+                 if (typeof (params.animation) === FUNCTION) {
                      diff = params.animation(progress);
                  }
                  var tick = Math.round((diff * (end - start)) + start);
                  params.onStep(tick);
                  if (progress === 1) {
-                     if (typeof (params.callback) === 'function') {
+                     if (typeof (params.callback) === FUNCTION) {
                          params.callback();
                      }
                      clearInterval(id);
@@ -122,7 +123,7 @@ SOFTWARE.
                 ///</param> 
                 document.onmousemove = function (e) {
                     var pos = smalljs.mouse.coords(e || window.event);
-                    if (typeof callback === 'function') {
+                    if (typeof callback === FUNCTION) {
                         callback(pos);
                     }
                 };
@@ -148,7 +149,7 @@ SOFTWARE.
                 this.onScroll(function () {
 
                     if ((smalljs.document.height() - smalljs.page.height()) == smalljs.page.scrollOffSet(global).Y) {
-                        if (typeof (fn) === 'function') {
+                        if (typeof (fn) === FUNCTION) {
                             fn();
                         }
                     }
@@ -194,13 +195,13 @@ SOFTWARE.
                 var r = { X: 0, Y: 0 };
                 obj = obj || global;
 
-                if (typeof (obj.pageXOffset) !== 'undefined') {
+                if (typeof (obj.pageXOffset) !== UNDEFINED) {
                     r.X = obj.pageXOffset;
                     r.Y = obj.pageYOffset;
                 } else {
                     //use document
                     var doc = obj.document;
-                    if (typeof (doc) !== 'undefined') {
+                    if (typeof (doc) !== UNDEFINED) {
                         if (doc.compatMode === 'CSS1Compat') {
                             r.X = doc.documentElement.scrollLeft;
                             r.Y = doc.documentElement.scrollTop;
