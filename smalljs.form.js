@@ -24,7 +24,7 @@ SOFTWARE.
 (function (smalljs,global) {
 
     var f = null;
-
+    var $ = smalljs.get;
     var UNDEFINED = 'undefined';
 
     var FORM_TYPE = {
@@ -54,6 +54,7 @@ SOFTWARE.
             return o.options[o.selectedIndex].value;
         }
     }
+
 
     function fn(name) {
 
@@ -143,7 +144,7 @@ SOFTWARE.
 
     if (typeof global !== UNDEFINED) {
         if (!global.sjForm) {
-            window.sjForm = sjForm;
+            global.sjForm = sjForm;
         }
     }
 

@@ -24,6 +24,8 @@ SOFTWARE.
 /* Required: smalljs.js  */
 (function (smalljs, $) {
     
+    var FUNCTION = 'function', UNDEFINED = 'undefined';
+
     var message = {
         cssClass: null,
         modal: function (msg, params) {
@@ -51,21 +53,21 @@ SOFTWARE.
             /// </signature>  
 
       
-            if (typeof (params.onOK) === 'function') {
+            if (typeof (params.onOK) === FUNCTION) {
                 this.modalEvent = params.onOK;
-            } else if (typeof (params.onOk) === 'function') {
+            } else if (typeof (params.onOk) === FUNCTION) {
                 this.modalEvent = params.onOk;
-            }else if(typeof(params.onok) === 'function'){
+            } else if (typeof (params.onok) === FUNCTION) {
                 this.modalEvent = params.onok;
             }
         
             if (this.modalEvent == null) { this.modalEvent = function () { }; }
-            if (typeof (params.buttons) !== 'undefined') {
-                if (typeof (params.buttons.ok) !== 'undefined') { this.setting.okText = params.buttons.ok; }
-                if (typeof (params.buttons.cancel) !== 'undefined') { this.setting.cancelText = params.buttons.cancel; }
-                if (typeof (params.buttons.width) !== 'undefined') { this.setting.buttonWidth = params.buttons.width; }
+            if (typeof (params.buttons) !== UNDEFINED) {
+                if (typeof (params.buttons.ok) !== UNDEFINED) { this.setting.okText = params.buttons.ok; }
+                if (typeof (params.buttons.cancel) !== UNDEFINED) { this.setting.cancelText = params.buttons.cancel; }
+                if (typeof (params.buttons.width) !== UNDEFINED) { this.setting.buttonWidth = params.buttons.width; }
             }
-            if (typeof (msg) === 'undefined') { msg = ''; }
+            if (typeof (msg) === UNDEFINED) { msg = ''; }
             this.show(msg, {
                 width: params.width,
                 height: params.height,
@@ -104,25 +106,25 @@ SOFTWARE.
             var hideButton = false;
             var showOnTop = false;
             var autohide = -1;
-            if (typeof (params) !== 'undefined') {
-                if (typeof (params.background) !== 'undefined') {
+            if (typeof (params) !== UNDEFINED) {
+                if (typeof (params.background) !== UNDEFINED) {
                     this.setting.backgroundColor = params.background;
                 }
-                if (typeof (params.width) !== 'undefined') {
+                if (typeof (params.width) !== UNDEFINED) {
                     this.setting.width = params.width;
                     this.setting.textAreaWidth = params.width - 10;
                 }
-                if (typeof (params.height) !== 'undefined') {
+                if (typeof (params.height) !== UNDEFINED) {
                     this.setting.height = params.height;
                     this.setting.textAreaHeight = params.height - 30;
                 }
-                if (typeof (params.hideButton) !== 'undefined') {
+                if (typeof (params.hideButton) !== UNDEFINED) {
                     hideButton = params.hideButton;
                 }
-                if (typeof (params.autoHide) !== 'undefined') {
+                if (typeof (params.autoHide) !== UNDEFINED) {
                     autohide = params.autoHide;
                 }
-                if (typeof (params.showOnTop) !== 'undefined') {
+                if (typeof (params.showOnTop) !== UNDEFINED) {
                     showOnTop = params.showOnTop;
                 }
                

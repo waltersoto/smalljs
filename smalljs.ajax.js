@@ -121,7 +121,69 @@ SOFTWARE.
         return list;
     }
 
- 
+    var file = function (req) {
+        ///	<summary>
+        ///	Post a file via XMLHttpRequest (IE9 or lower doesn't support the file api)
+        ///	</summary>
+        ///	<param name="req" type="json">
+        ///	 { 
+        ///      url: '',
+        ///      file:'posted file',
+        ///      onError:function(),
+        ///      onAbort:function(),
+        ///      onLoad:function(),
+        ///      onLoadStart:function(),
+        ///      onLoadEnd:function(),
+        ///      onProgress:function(),
+        ///      onTimeout:function(),
+        ///      onResponse:function()
+        ///  }
+        ///	</param> 
+        (function (xH) {
+            var format = isDefined(req.resultType) ? req.resultType : JSON;
+            if (isDefined(req.onAbort)) { xH.upload.onabort = req.onAbort; }
+            if (isDefined(req.onError)) { xH.upload.onerror = req.onError; }
+            if (isDefined(req.onLoad)) { xH.upload.onload = req.onLoad; }
+            if (isDefined(req.onLoadStart)) { xH.upload.onloadstart = req.onLoadStart; }
+            if (isDefined(req.onLoadEnd)) { xH.upload.onloadend = req.onLoadEnd; }
+            if (isDefined(req.onProgress)) { xH.upload.onprogress = req.onProgress; }
+            if (isDefined(req.onTimeout)) { xH.upload.ontimeout = req.onTimeout; }
+            xH.open(METHOD_POST, req.url);
+            xH.setRequestHeader("Cache-Control", "no-cache");
+            xH.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            xH.setRequestHeader("X-File-Name", req.file.name);
+            xH.onreadystatechange = function () {
+
+                if (xH.readyState == 4) {
+                    if (xH.responseText.length > 0) {
+                        var result = "";
+                        switch (format.toString().toUpperCase()) {
+                            case RESULT_STRING: result = xH.responseText; //Text
+                                break;
+                            case RESULT_XML: result = xml.parse(xH.responseText);
+                                break;
+                            case RESULT_JSON: result = xH.responseText;
+                                if (typeof (JSON) !== UNDEFINED) {
+                                    result = JSON.parse(result);
+                                }
+                                break;
+                            default: result = xH.responseText;
+                                break;
+                        }
+                        if (xH.status == 200) {
+                            if (isFunction(req.onResponse)) {
+                                req.onResponse(result);
+                            }
+                        }
+                    }
+                    xH = null;//End
+                }
+
+            };
+
+            xH.send(req.file);
+        })(request());
+    };
 
     function  call(req) {
         ///	<summary>
@@ -226,7 +288,47 @@ SOFTWARE.
     }
 
     smalljs.extend({
-        ajax:call
+        ajax: call,
+        ajaxFile:file
+    });
+
+    smalljs.plugin({
+        upload: function (params) {
+            ///	<summary>
+            ///	Upload file(s)
+            ///	</summary>
+            ///	<param name="params" type="json">
+            ///	 {
+            ///	     url:'',
+            ///      onError:function(),
+            ///      onAbort:function(),
+            ///      onLoad:function(),
+            ///      onLoadStart:function(),
+            ///      onLoadEnd:function(),
+            ///      onProgress:function(),
+            ///      onTimeout:function(),
+            ///      onResponse:function()
+            ///  }
+            ///	</param>   ar
+            this.forEach(function () {
+                if (smalljs.get(this).files.length > 0) {
+                    var file = smalljs.get(this).files[0]; 
+                    smalljs.ajaxFile({
+                        url: params.url,
+                        file: file,
+                        onProgress: params.onProgress,
+                        onError: params.onError,
+                        onAbort: params.onAbort,
+                        onLoad: params.onLoad,
+                        onLoadStart: params.onLoadStart,
+                        onLoadEnd: params.onLoadEnd,
+                        onTimeout: params.onTimeout,
+                        onResponse: params.onResponse
+                    });
+                }
+            });
+            return this;
+        }
     });
 
 })(window,smalljs);

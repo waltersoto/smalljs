@@ -132,6 +132,7 @@ SOFTWARE.
                 });
 
             },
+            add:add,
             read: function () {
                 ///	<summary>
                 /// Read tags
