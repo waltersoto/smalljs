@@ -140,7 +140,7 @@ SOFTWARE.
         ///  }
         ///	</param> 
         (function (xH) {
-            var format = isDefined(req.resultType) ? req.resultType : JSON;
+            var format = isDefined(req.resultType) ? req.resultType : RESULT_JSON;
             if (isDefined(req.onAbort)) { xH.upload.onabort = req.onAbort; }
             if (isDefined(req.onError)) { xH.upload.onerror = req.onError; }
             if (isDefined(req.onLoad)) { xH.upload.onload = req.onLoad; }

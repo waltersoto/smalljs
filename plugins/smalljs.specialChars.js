@@ -49,7 +49,8 @@ SOFTWARE.
     });
 
     sj.extend({
-        noSpecialChars:noChars
+        noSpecialChars: noChars,
+        removeSpecialChars:remove
     });
 
 

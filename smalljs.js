@@ -743,12 +743,19 @@ SOFTWARE.
     };
 
     instance.prototype.show = function (inherit) {
+        /// <signature>
         ///	<summary>
-        /// Set 'display' style to 'block' or 'inherit'
+        /// Set 'display' style to 'inherit' if true is passed
         ///	</summary>
         ///	<param name="inherit" type="boolean">
         /// Use 'inherit' instead of 'block'
-        ///	</param> 
+        ///	</param>  
+        /// </signature>
+        /// <signature>
+        ///	<summary>
+        /// Set 'display' style to 'block'
+        ///	</summary> 
+        /// </signature> 
         ///	<returns type="this" />
 
         this.forEach(function () {
@@ -768,6 +775,28 @@ SOFTWARE.
         });
         return this;
     };
+    
+    instance.prototype.displaySwap = function (inherit) {
+        /// <signature>
+        ///	<summary>
+        /// Swap 'display' style to from 'none' to 'inherit' if true is passed and viceversa
+        ///	</summary>
+        ///	<param name="inherit" type="boolean">
+        /// Use 'inherit' instead of 'block'
+        ///	</param>  
+        /// </signature>
+        /// <signature>
+        ///	<summary>
+        /// Swap 'display' style to from 'none' to 'block' and viceversa
+        ///	</summary> 
+        /// </signature> 
+        this.forEach(function () { 
+            get(this).style.display = (get(this).style.display == 'none')
+                                       ? (inherit ? 'inherit' : 'block') : 'none';
+          
+        });
+        return this;
+    }
 
     var startClass = '(?:^|\\s)';
     var endClass = '(?!\\S)'

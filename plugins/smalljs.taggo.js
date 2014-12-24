@@ -109,6 +109,7 @@ SOFTWARE.
 
     sj.extend({
         taggo: {
+            tags:tags,
             bind: function (parameters) {
                 ///	<summary>
                 /// Bind taggo script to a textbox, display div, css class, and/or button
