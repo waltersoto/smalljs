@@ -158,7 +158,10 @@ SOFTWARE.
                     } else {
                         if (isDefined(e.length) && e.length > 0 && e.tagName === 'SELECT') {
                             o.push(e);
-                        } else if (isDefined(e.length) && e.length == 0) {
+                        } else if (isDefined(e.length) && e.length == 0) { 
+                            if (e === window) {
+                                o.push(e);
+                            }
                         } else {
                             o.push(e);
                         }
