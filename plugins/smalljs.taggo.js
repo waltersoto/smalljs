@@ -57,27 +57,26 @@ SOFTWARE.
             key = window.event.keyCode;     //IE
         } else {
             key = e.which;     //firefox
-        }
-
-        if (key == 44 || key == 13) {
-            add();
-            return false;
+        } 
+        if (key == 188 || key == 13) {
+            add(); 
+            return false; 
         }
         return true;
     }
 
     function add() { 
         if (!sj(params.textbox).isEmpty()) {
-            var fromText = $(params.textbox).value.split(',');
+            var fromText = $(params.textbox).value.split(','); 
             for (var textLoop = 0; textLoop < fromText.length; textLoop++) {
-                if (tags.indexOf(fromText[textLoop].trim()) === -1 && fromText[textLoop].trim().length > 0) {
-                    tags.push(fromText[textLoop].trim());
-                    deleteFromRemove(fromText[textLoop].trim()); //Remove from list is needed
+                if (tags.indexOf(sj.trim(fromText[textLoop])) === -1 && sj.trim(fromText[textLoop]).length > 0) {
+                    tags.push(sj.trim(fromText[textLoop]));
+                    deleteFromRemove(sj.trim(fromText[textLoop])); //Remove from list is needed
                 }
             }
             loadTags({ display: params.display, tagClass: params.tagClass }); //reload tags 
             sj(params.textbox).text('');
-        }
+        } 
     }
 
     function loadTags(params) {
@@ -128,7 +127,7 @@ SOFTWARE.
                         add();
                     });
                 }
-                sj(params.textbox).addEvent('keypress', function (event) {
+                sj(params.textbox).addEvent('onkeyup', function (event) {
                     return handleAdd(event);
                 });
 

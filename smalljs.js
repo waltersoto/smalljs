@@ -192,7 +192,8 @@ SOFTWARE.
     };
  
     sj.extend({
-        get:get,
+        get: get,
+        trim:trim,
         plugin: function (extension) {
             ///	<summary>
             ///	Add a plugin method
