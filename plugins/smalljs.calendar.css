@@ -1,0 +1,85 @@
+﻿ 
+.sj-cal{
+    position:relative;
+    margin:100px 0px 0px 100px;
+    padding:5px;
+    background-color:#fff;
+    border:1px solid #f5f3f3;
+    width:220px;
+    
+}
+
+.sj-cal .header .left {
+    float:left;
+    position: relative;
+    width: 20%;
+    cursor:pointer;
+    text-align:center;  
+}
+
+.left:hover{
+    background-color:#ddd;
+} 
+    
+.sj-cal .header .center {
+    float: left;
+    position: relative;
+    text-align: center;
+    width: 60%;
+}
+
+.sj-cal .header .right {
+    float:right;
+    text-align:center;
+    cursor:pointer;
+    position:relative;
+    width:20%; 
+}
+    
+.right:hover{
+    background-color:#ddd;
+}
+    
+.sj-cal-clear {
+    clear: both;
+    height: 0px;
+}
+     
+.sj-cal .days .labels .lbl {
+    position: relative;
+    padding-top:5px;
+    width: 30px;
+    height: 25px;
+    text-align: center;
+    float: left;
+}
+
+.sj-cal .days .day-row{
+    position:relative; 
+}
+
+.sj-cal .days .day-row .day {
+    position: relative;
+    padding-top: 5px;
+    width: 30px;
+    height: 25px;
+    text-align: center;
+    float: left;
+    cursor:pointer; 
+      -webkit-transition: background-color 0.3s ease-in;
+    -moz-transition: background-color 0.3s ease-in;
+    -o-transition: background-color 0.3s ease-in;
+    transition: background-color 0.3s ease-in;
+}
+
+.sj-cal .days .day-row .day:hover{
+    background-color:#f5f3f3; 
+}
+    
+.sj-cal-outof {
+    color: #ddd;
+}
+
+.sj-cal-today{
+    background-color:#ddd;
+}
