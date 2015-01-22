@@ -115,7 +115,7 @@ SOFTWARE.
                         break;
                 }
 
-                flip(rotateLeft(A + p + buffer[index] + K[i],SHIFT[(range * 4) | (i & 3)]););
+                flip(rotateLeft(A + p + buffer[index] + K[i],SHIFT[(range * 4) | (i & 3)]));
                
             }
 
@@ -135,7 +135,8 @@ SOFTWARE.
 
                 for (var a = 0; a < 4; a++)
                 {
-                    hash[count++] = n;
+                    hash[count++] = n.toString(16).substr(-16);
+                    console.log(n.toString(16).substr(-16));
                     n = n / Math.pow(2, 8);
                 }
             }
@@ -165,16 +166,16 @@ SOFTWARE.
         return p;
     };
 
-    var process = function (data) {
+    var md5 = function (data) {
 
         DATA = data;
         SIZE = data.Length;
-        BLOCK_COUNT = ((Size + 8) >> 6) + 1;
+        BLOCK_COUNT = ((SIZE + 8) >> 6) + 1;
         PADDING = padding([], SIZE);
 
         var buffer = [];
 
-        var digest = new digest();  
+        var d = new digest();  
 
 
         for (var i = 0; i < BLOCK_COUNT; i ++)
@@ -187,14 +188,15 @@ SOFTWARE.
                 buffer[bufferIndex] = (((index <SIZE) ? DATA[index] : PADDING[index - SIZE]) << 24) | (buffer[(bufferIndex)] >> 8);
             }
 
-            digest.process(buffer);
+            d.process(buffer);
              
         }
 
-        return digest.GetHash();
+        return d.getHash();
 
     };
 
+    window.md5 = md5;
 
 
 })();
