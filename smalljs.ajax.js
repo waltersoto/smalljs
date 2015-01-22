@@ -23,15 +23,21 @@ SOFTWARE.
 */
 (function (window, smalljs) {
 
-       //Constants
-    var METHOD_POST = 'POST',
-        METHOD_GET = 'GET',
-        METHOD_HEADER = 'HEADER',
-        RESULT_JSON = 'JSON',
-        RESULT_STRING = 'STRING',
-        RESULT_XML = 'XML',
-        RESULT_STATUS = 'STATUS',
-        DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded',
+    //Constants
+    var METHOD = {
+        POST: 'POST',
+        GET: 'GET',
+        HEADER:'HEADER'
+    };
+
+    var RESULT = {
+        JSON: 'JSON',
+        STRING: 'STRING',
+        XML: 'XML',
+        STATUS:'STATUS'
+    };
+
+    var DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded',
         UNDEFINED = 'undefined';
 
     function isDefined(o) { return typeof o !== UNDEFINED; }
@@ -140,7 +146,7 @@ SOFTWARE.
         ///  }
         ///	</param> 
         (function (xH) {
-            var format = isDefined(req.resultType) ? req.resultType : RESULT_JSON;
+            var format = isDefined(req.resultType) ? req.resultType : RESULT.JSON;
             if (isDefined(req.onAbort)) { xH.upload.onabort = req.onAbort; }
             if (isDefined(req.onError)) { xH.upload.onerror = req.onError; }
             if (isDefined(req.onLoad)) { xH.upload.onload = req.onLoad; }
@@ -148,7 +154,7 @@ SOFTWARE.
             if (isDefined(req.onLoadEnd)) { xH.upload.onloadend = req.onLoadEnd; }
             if (isDefined(req.onProgress)) { xH.upload.onprogress = req.onProgress; }
             if (isDefined(req.onTimeout)) { xH.upload.ontimeout = req.onTimeout; }
-            xH.open(METHOD_POST, req.url);
+            xH.open(METHOD.POST, req.url);
             xH.setRequestHeader("Cache-Control", "no-cache");
             xH.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             xH.setRequestHeader("X-File-Name", req.file.name);
@@ -158,11 +164,11 @@ SOFTWARE.
                     if (xH.responseText.length > 0) {
                         var result = "";
                         switch (format.toString().toUpperCase()) {
-                            case RESULT_STRING: result = xH.responseText; //Text
+                            case RESULT.STRING: result = xH.responseText; //Text
                                 break;
-                            case RESULT_XML: result = xml.parse(xH.responseText);
+                            case RESULT.XML: result = xml.parse(xH.responseText);
                                 break;
-                            case RESULT_JSON: result = xH.responseText;
+                            case RESULT.JSON: result = xH.responseText;
                                 if (typeof (JSON) !== UNDEFINED) {
                                     result = JSON.parse(result);
                                 }
@@ -210,12 +216,12 @@ SOFTWARE.
         ///	</param> 
     
             if (isDefined(req.url)) { 
-                var format = isDefined(req.resultType) ? req.resultType : RESULT_JSON ,parameters = '';
+                var format = isDefined(req.resultType) ? req.resultType : RESULT.JSON ,parameters = '';
                 if (isDefined(req.data)) {
                     parameters = getParameters(req.data, req.url,
                     (isDefined(req.encode) ? true : false));
                 }
-                var req_method = isDefined(req.method) ? req.method : METHOD_POST;
+                var req_method = isDefined(req.method) ? req.method : METHOD.POST;
                 var xH = request();
 
                 if (xH !== null) {
@@ -225,16 +231,16 @@ SOFTWARE.
                                 var result = "";
                                 var status = xH.status;
                                 switch (format.toString().toUpperCase()) {
-                                    case RESULT_STRING: result = xH.responseText; //Text
+                                    case RESULT.STRING: result = xH.responseText; //Text
                                         break;
-                                    case RESULT_XML: result = xml.parse(xH.responseText);
+                                    case RESULT.XML: result = xml.parse(xH.responseText);
                                         break;
-                                    case RESULT_JSON: result = xH.responseText;
+                                    case RESULT.JSON: result = xH.responseText;
                                         if (typeof (JSON) !== UNDEFINED) {
                                             result = JSON.parse(result);
                                         }
                                         break;
-                                    case RESULT_STATUS: result = status;
+                                    case RESULT.STATUS: result = status;
                                         break;
                                     default: result = xH.responseText;
                                         break;
@@ -259,9 +265,9 @@ SOFTWARE.
                     var params = null, reqUrl = req.url;
                      
                     //Get
-                    if (req_method.toUpperCase() === METHOD_GET) {
+                    if (req_method.toUpperCase() === METHOD.GET) {
                         reqUrl += parameters;
-                    } else if (req_method.toUpperCase() === METHOD_POST) {
+                    } else if (req_method.toUpperCase() === METHOD.POST) {
                         params = parameters.replace('?', '');
                     }
                   
@@ -274,7 +280,7 @@ SOFTWARE.
                     }
                     xH.open(req_method, reqUrl, true);
                     xH.setRequestHeader('Content-Type', contentType);
-                    if (contentType.toUpperCase() === RESULT_JSON) {
+                    if (contentType.toUpperCase() === RESULT.JSON) {
                         xH.send(JSON.stringify(req.data));
                     } else {
                         xH.send(params);
