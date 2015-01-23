@@ -48,7 +48,7 @@ SOFTWARE.
 
     var rotateLeft = function(val, count)
     {
-        return  (val << count) | (val >> (32 - count));
+        return (val << count) | (val >>> (32 - count)) >>> 0;
     }
 
     var digest = function () {
@@ -84,6 +84,10 @@ SOFTWARE.
             B = hold;
         };
 
+        var unsigned = function (val) {
+            return val >>> 0;
+        }
+
         this.process = function (buffer) {
 
             var locA = A;
@@ -93,29 +97,33 @@ SOFTWARE.
 
             for (var i = 0; i < 64; i++)
             {
-                var range = i / CHUNK;
+                var range = unsigned(i / CHUNK);
                 var p = 0;
                 var index = i;
+               // console.log(B + ', ' + C + ', ' + D);
                 switch (range)
                 {
                     case 0:
-                        p = (B & C) | (~B & D);
+                        p = unsigned((B & C) | (~B & D));
                         break;
                     case 1:
-                        p = (B & D) | (C & ~D);
-                        index = (index * 5 + 1) % CHUNK;
+                        p = unsigned((B & D) | (C & ~D));
+                        index = unsigned((index * 5 + 1) % CHUNK);
                         break;
                     case 2:
-                        p = B ^ C ^ D;
-                        index = (index * 3 + 5) % CHUNK;
+                        p = unsigned(B ^ C ^ D);
+                        index = unsigned((index * 3 + 5) % CHUNK);
                         break;
                     case 3:
-                        p = C ^ (B | ~D);
-                        index = (index * 7) % CHUNK;
+                        p = unsigned(C ^ (B | ~D));
+                        index = unsigned((index * 7) % CHUNK);
                         break;
                 }
-
-                flip(rotateLeft(A + p + buffer[index] + K[i],SHIFT[(range * 4) | (i & 3)]));
+                 
+                var r1 = unsigned(A + p + buffer[index] + K[i]);
+                var r2 = unsigned(SHIFT[((range * 4) | (i & 3))]); 
+                var rotated = unsigned(rotateLeft(r1, r2)); 
+                flip(unsigned(B + rotated));
                
             }
 
@@ -131,13 +139,14 @@ SOFTWARE.
             var count = 0;
             for (var i = 0; i < 4; i++)
             {
-                var n = N(i);
+                var n = unsigned(N(i));
 
                 for (var a = 0; a < 4; a++)
                 {
-                    hash[count++] = n.toString(16).substr(-16);
-                    console.log(n.toString(16).substr(-16));
-                    n = n / Math.pow(2, 8);
+                    Number(n).toString(16);
+               
+                    hash[count++] = Number(n).toString(16);
+                    n = unsigned(n / Math.pow(2, 8));
                 }
             }
 
@@ -146,12 +155,19 @@ SOFTWARE.
 
     }
 
-    var DATA;
+    var DATA = [];
     var SIZE;
     var BLOCK_COUNT;
     var PADDING;
 
-    var padding = function (p,size) {
+    var padding = function (size) {
+
+        var total = BLOCK_COUNT << 6;
+        var padSize = total - SIZE;
+        var p = [];
+        for (var i = 0; i < padSize; i++){
+            p[i] = 0;
+        }
 
         p[0] = 0x80;
 
@@ -159,19 +175,33 @@ SOFTWARE.
 
         for (var i = 0; i < 8; i++)
         {
-            p[p.Length - 8 + i] =  msg;  
+            p[p.length - 8 + i] =  Math.floor(msg);  
             msg /= 269; 
-        }
-
+        } 
         return p;
     };
 
+    var toArray = function (data) {
+        var d = [];
+        for (var i = 0; i < data.length; i++) {
+            d.push(data.charCodeAt(i));
+        }
+        return d;
+    };
+
+    var noUndefined = function (val) {
+        if (typeof val === 'undefined') {
+            return 0;
+        }
+        return val;
+    }
+
     var md5 = function (data) {
 
-        DATA = data;
-        SIZE = data.Length;
+        DATA = toArray(unescape(encodeURIComponent(data)));
+        SIZE = DATA.length;
         BLOCK_COUNT = ((SIZE + 8) >> 6) + 1;
-        PADDING = padding([], SIZE);
+        PADDING = padding(SIZE);
 
         var buffer = [];
 
@@ -184,10 +214,10 @@ SOFTWARE.
   
             for (var a = 0; a < 64; a++, index++)
             {
-                var bufferIndex = (a / 4);
-                buffer[bufferIndex] = (((index <SIZE) ? DATA[index] : PADDING[index - SIZE]) << 24) | (buffer[(bufferIndex)] >> 8);
-            }
-
+                var bufferIndex = Math.floor(a / 4);
+             
+                buffer[bufferIndex] = ((((index < SIZE) ? DATA[index] : PADDING[index - SIZE]) << 24) | (buffer[(bufferIndex)] >> 8)) >>> 0;
+            } 
             d.process(buffer);
              
         }
