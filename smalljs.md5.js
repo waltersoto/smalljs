@@ -21,7 +21,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-(function () {
+(function (smalljs) {
 
     var K = [0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 				0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -77,6 +77,10 @@ SOFTWARE.
             return n;
         };
 
+        var toByte = function (n) {
+            return n & 255;
+        };
+
         var flip = function (hold) {
             A = D;
             D = C;
@@ -88,6 +92,7 @@ SOFTWARE.
             return val >>> 0;
         }
 
+  
         this.process = function (buffer) {
 
             var locA = A;
@@ -143,15 +148,15 @@ SOFTWARE.
 
                 for (var a = 0; a < 4; a++)
                 {
-                    Number(n).toString(16);
-               
-                    hash[count++] = Number(n).toString(16);
+                    hash[count++] = toByte(n).toString(16);
                     n = unsigned(n / Math.pow(2, 8));
                 }
             }
 
             return hash;
         };
+
+        
 
     }
 
@@ -215,18 +220,19 @@ SOFTWARE.
             for (var a = 0; a < 64; a++, index++)
             {
                 var bufferIndex = Math.floor(a / 4);
-             
+
                 buffer[bufferIndex] = ((((index < SIZE) ? DATA[index] : PADDING[index - SIZE]) << 24) | (buffer[(bufferIndex)] >> 8)) >>> 0;
             } 
             d.process(buffer);
-             
         }
 
-        return d.getHash();
+        return d.getHash().join('');
 
     };
 
-    window.md5 = md5;
+    smalljs.extend({
+        md5:md5
+    })
 
 
-})();
+})(smalljs);
