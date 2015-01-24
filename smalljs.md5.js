@@ -105,7 +105,6 @@ SOFTWARE.
                 var range = unsigned(i / CHUNK);
                 var p = 0;
                 var index = i;
-               // console.log(B + ', ' + C + ', ' + D);
                 switch (range)
                 {
                     case 0:
