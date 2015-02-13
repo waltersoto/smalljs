@@ -24,30 +24,30 @@ SOFTWARE.
 (function (window, smalljs) {
 
     //Constants
-    var METHOD = {
-        POST: 'POST',
-        GET: 'GET',
-        HEADER:'HEADER'
+    var method = {
+        POST: "POST",
+        GET: "GET",
+        HEADER:"HEADER"
     };
 
     var RESULT = {
-        JSON: 'JSON',
-        STRING: 'STRING',
-        XML: 'XML',
-        STATUS:'STATUS'
+        JSON: "JSON",
+        STRING: "STRING",
+        XML: "XML",
+        STATUS:"STATUS"
     };
 
-    var DEFAULT_CONTENT_TYPE = 'application/x-www-form-urlencoded',
-        UNDEFINED = 'undefined';
+    var DEFAULT_CONTENT_TYPE = "application/x-www-form-urlencoded",
+        UNDEFINED = "undefined";
 
     function isDefined(o) { return typeof o !== UNDEFINED; }
-    function isFunction(f){ return typeof f === 'function'; }
+    function isFunction(f){ return typeof f === "function"; }
 
      function parseXml(text) { 
             var xmlDoc;
             if (window.DOMParser) {
-                xmlParser = new DOMParser();
-                xmlDoc = xmlParser.parseFromString(text, 'text/xml');
+                var xmlParser = new DOMParser();
+                xmlDoc = xmlParser.parseFromString(text, "text/xml");
             } else {
                 xmlDoc = new ActiveXObject('Microsoft.XMLDOM');
                 xmlDoc.async = 'false';
@@ -62,13 +62,13 @@ SOFTWARE.
             return new XMLHttpRequest();
         } else {//IE 5,6
             try {
-                return new ActiveXObject('Msxml2.XMLHTTP.6.0');
+                return new ActiveXObject("Msxml2.XMLHTTP.6.0");
             } catch (e) {
                 try {
-                    return new ActiveXObject('Msxml2.XMLHTTP.3.0');
+                    return new ActiveXObject("Msxml2.XMLHTTP.3.0");
                 } catch (e2) {
                     try {
-                        return new ActiveXObject('Microsoft.XMLhttp');
+                        return new ActiveXObject("Microsoft.XMLhttp");
                     } catch (ex) {
                         return null; //Browser doesn't support ajax
                     }
@@ -84,14 +84,14 @@ SOFTWARE.
         ///	<param name="url" type="string">
         ///	 Ajax call url
         ///	</param>
-        var symbol = '';
-        if (url.indexOf('?') == -1) {
-            symbol = '?';
+        var symbol;
+        if (url.indexOf("?") === -1) {
+            symbol = "?";
         } else {
-            if (url.indexOf('&') == -1 && url.indexOf('?') == url.length - 1) {
-                symbol = '';
+            if (url.indexOf("&") === -1 && url.indexOf("?") === url.length - 1) {
+                symbol = "";
             } else {
-                symbol = '&';
+                symbol = "&";
             }
         }
         return symbol;
@@ -111,16 +111,18 @@ SOFTWARE.
         ///	 Encode URL?
         ///	</param>
         ///	<returns type="string" />
-        var symbol = firstSymbol(url), list = '';
+        var symbol = firstSymbol(url), list = "";
         for (var p in params) {
-            if (isDefined(params[p])) {
-                var par = params[p];
-                if (isDefined(encode)) {
-                    par = encodeURIComponent(par);
-                }
-                list += symbol + p + '=' + par;
-                if (symbol != '&') {
-                    symbol = '&';
+            if (params.hasOwnProperty(p)) {
+                if (isDefined(params[p])) {
+                    var par = params[p];
+                    if (isDefined(encode)) {
+                        par = encodeURIComponent(par);
+                    }
+                    list += symbol + p + "=" + par;
+                    if (symbol !== "&") {
+                        symbol = "&";
+                    }
                 }
             }
         }
@@ -154,15 +156,15 @@ SOFTWARE.
             if (isDefined(req.onLoadEnd)) { xH.upload.onloadend = req.onLoadEnd; }
             if (isDefined(req.onProgress)) { xH.upload.onprogress = req.onProgress; }
             if (isDefined(req.onTimeout)) { xH.upload.ontimeout = req.onTimeout; }
-            xH.open(METHOD.POST, req.url);
+            xH.open(method.POST, req.url);
             xH.setRequestHeader("Cache-Control", "no-cache");
             xH.setRequestHeader("X-Requested-With", "XMLHttpRequest");
             xH.setRequestHeader("X-File-Name", req.file.name);
             xH.onreadystatechange = function () {
 
-                if (xH.readyState == 4) {
+                if (xH.readyState === 4) {
                     if (xH.responseText.length > 0) {
-                        var result = "";
+                        var result;
                         switch (format.toString().toUpperCase()) {
                             case RESULT.STRING: result = xH.responseText; //Text
                                 break;
@@ -176,7 +178,7 @@ SOFTWARE.
                             default: result = xH.responseText;
                                 break;
                         }
-                        if (xH.status == 200) {
+                        if (xH.status === 200) {
                             if (isFunction(req.onResponse)) {
                                 req.onResponse(result);
                             }
@@ -216,19 +218,19 @@ SOFTWARE.
         ///	</param> 
     
             if (isDefined(req.url)) { 
-                var format = isDefined(req.resultType) ? req.resultType : RESULT.JSON ,parameters = '';
+                var format = isDefined(req.resultType) ? req.resultType : RESULT.JSON ,parameters = "";
                 if (isDefined(req.data)) {
                     parameters = getParameters(req.data, req.url,
                     (isDefined(req.encode) ? true : false));
                 }
-                var req_method = isDefined(req.method) ? req.method : METHOD.POST;
+                var reqMethod = isDefined(req.method) ? req.method : method.POST;
                 var xH = request();
 
-                if (xH !== null) {
+                if (xH !== null && isDefined(xH)) {
                     xH.onreadystatechange = function () { 
-                        if (xH.readyState == 4) {
+                        if (xH.readyState === 4) {
                             if (xH.responseText.length > 0) {
-                                var result = "";
+                                var result;
                                 var status = xH.status;
                                 switch (format.toString().toUpperCase()) {
                                     case RESULT.STRING: result = xH.responseText; //Text
@@ -245,7 +247,7 @@ SOFTWARE.
                                     default: result = xH.responseText;
                                         break;
                                 }
-                                if (status == 200) {
+                                if (status === 200) {
                                     if (isFunction(req.onResponseHeader)) {
                                         req.onResponseHeader(xH.getAllResponseHeaders());
                                     }
@@ -265,10 +267,10 @@ SOFTWARE.
                     var params = null, reqUrl = req.url;
                      
                     //Get
-                    if (req_method.toUpperCase() === METHOD.GET) {
+                    if (reqMethod.toUpperCase() === method.GET) {
                         reqUrl += parameters;
-                    } else if (req_method.toUpperCase() === METHOD.POST) {
-                        params = parameters.replace('?', '');
+                    } else if (reqMethod.toUpperCase() === method.POST) {
+                        params = parameters.replace("?", "");
                     }
                   
                     var contentType = isDefined(req.contentType) ? req.contentType : DEFAULT_CONTENT_TYPE;
@@ -278,8 +280,8 @@ SOFTWARE.
                     if (isFunction(req.onTimeout)) {
                         xH.ontimeout = req.onTimeout;
                     }
-                    xH.open(req_method, reqUrl, true);
-                    xH.setRequestHeader('Content-Type', contentType);
+                    xH.open(reqMethod, reqUrl, true);
+                    xH.setRequestHeader("Content-Type", contentType);
                     if (contentType.toUpperCase() === RESULT.JSON) {
                         xH.send(JSON.stringify(req.data));
                     } else {
@@ -287,7 +289,7 @@ SOFTWARE.
                     }
                 } else { 
                     if (isFunction(req.onError)) {
-                        req.onError('0', 'Browser does not support ajax');
+                        req.onError("0", "Browser does not support ajax");
                     } 
                 }
             }           
@@ -318,10 +320,10 @@ SOFTWARE.
             ///	</param>   ar
             this.forEach(function () {
                 if (smalljs.get(this).files.length > 0) {
-                    var file = smalljs.get(this).files[0]; 
+                    var lFile = smalljs.get(this).files[0]; 
                     smalljs.ajaxFile({
                         url: params.url,
-                        file: file,
+                        file: lFile,
                         onProgress: params.onProgress,
                         onError: params.onError,
                         onAbort: params.onAbort,

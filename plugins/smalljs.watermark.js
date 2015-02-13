@@ -11,28 +11,28 @@
                 }
                 return empty;
             },
-            setText: function (id, text) {
-                text = typeof(text)==='undefined'?'':text;
+            setText: function(id, text) {
+                text = typeof(text) === "undefined" ? "" : text;
                 sj(id).removeClass(smalljs.watermark.watermarkClass);
                 sj(id).text(text);
             },
-            reset: function (o, t) {
+            reset: function(o, t) {
 
-                sj(o).addEvent('focus', function () {
+                sj(o).addEvent("focus", function() {
                     if (o.value === t && sj(o).classExists(smalljs.watermark.watermarkClass)) {
-                        o.value = '';
+                        o.value = "";
                         sj(o).removeClass(smalljs.watermark.watermarkClass);
                     }
                 });
 
-                sj(o).addEvent('focus', function () {
-                        if (smalljs.get(o).value.length < 1) {
-                            smalljs.get(o).value = t;
-                            sj(o).addClass(smalljs.watermark.watermarkClass);
-                        }
-                }); 
+                sj(o).addEvent("focus", function() {
+                    if (smalljs.get(o).value.length < 1) {
+                        smalljs.get(o).value = t;
+                        sj(o).addClass(smalljs.watermark.watermarkClass);
+                    }
+                });
             },
-            watermarkClass: '_assign_text_watermark_css_',
+            watermarkClass: "_assign_text_watermark_css_",
             enable: function (watermarkCss) {
                 ///	<summary>
                 ///  Enable watermark property for text inputs.
@@ -46,13 +46,13 @@
                 ///       padding-left:10px;
                 ///   } 
                 ///	</param>  
-                smalljs.watermark.watermarkClass = watermarkCss; 
-                sj('[watermark]').forEach(function () {
-                    var w = this.getAttribute('watermark');
+                smalljs.watermark.watermarkClass = watermarkCss;
+                sj("[watermark]").forEach(function() {
+                    var w = this.getAttribute("watermark");
                     if (w) {
                         sj(this).addClass(smalljs.watermark.watermarkClass);
                         this.value = w;
-                        (function (o, t) {
+                        (function(o, t) {
                             smalljs.watermark.reset(o, t);
                         })(this, w);
                     }

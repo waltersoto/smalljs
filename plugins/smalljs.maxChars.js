@@ -36,13 +36,13 @@ SOFTWARE.
             ///</param>
             ///	<returns type="this" />
             this.forEach(function () {
-                (function (id) {
-                    smalljs(id).addEvent('keyup', (function () {
+                (function(id) {
+                    smalljs(id).addEvent("keyup", (function() {
                         var len = $(id).value.length;
                         if (len >= max) {
                             $(id).value = $(id).value.substring(0, max);
                         }
-                        if (typeof (callback) === 'function') {
+                        if (typeof (callback) === "function") {
                             callback((max - len > -1) ? max - len : 0);
                         }
                     }));

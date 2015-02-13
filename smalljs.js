@@ -26,29 +26,25 @@ SOFTWARE.
         //for IE6,IE7 compatibility include any of the following libraries:
         if (window.Sizzle) {
             //URL: http://sizzlejs.com
-            document.querySelectorAll = Sizzle;
+            document.querySelectorAll = window.Sizzle;
         } else if (window.Selector) {
             //URL: http://www.llamalab.com/js/selector/
-            document.querySelectorAll = Selector;
+            document.querySelectorAll = window.Selector;
         }
     }
 
-    var UNDEFINED = 'undefined', FUNCTION = 'function';
+    var UNDEFINED = "undefined", FUNCTION = "function";
 
     function isDefined(o) {
         return typeof o !== UNDEFINED;
     }
     function contains(str,substring) {
-        return str.indexOf(substring) != -1;
+        return str.indexOf(substring) !== -1;
     }
     function trim(str) {
-        return str.replace(/^\s+|\s+$/g, '');
+        return str.replace(/^\s+|\s+$/g, "");
     }
-
-    function fooVal(expression) {
-        new Function("return " + expression)();
-    }
-
+ 
     var get = function () {
         ///	<summary>
         /// 	1: Get DOM element by id, name, class name, or query selector
@@ -58,9 +54,9 @@ SOFTWARE.
 
         for (i = 0, m = arguments.length; i < m; i++) {
             var element = null, arg = arguments[i];
-            if (typeof arg === 'string') {
+            if (typeof arg === "string") {
                 element = doc.getElementById(arg);
-                if (element === null) {
+                if (element === null || !isDefined(element)) {
                     element = doc.getElementsByTagName(arg);
                     if (element.length === 1) { element = element[0]; } else if (element.length > 1) { return element; }
                 }
@@ -111,19 +107,20 @@ SOFTWARE.
         me: null
     };
 
-    function instance(plugins) {
-        this.me = plugins.me;
+    function instance(newPlugins) {
+        this.me = newPlugins.me;
         if (!(this instanceof instance)) {
-            throw new Error('Constructor called as a function');
+            throw new Error("Constructor called as a function");
         }
-        //Include plugins if any
-        if (isDefined(plugins)) {
-            for (var p in plugins) {
-                if (isDefined(plugins[p])) {
-                    if (!isDefined(instance.prototype[p])) {
-                        instance.prototype[p] = plugins[p];
-                    } else if (p == 'me') {
-                        instance.prototype[p] = plugins[p];
+        if (isDefined(newPlugins)) {
+            for (var p in newPlugins) {
+                if (newPlugins.hasOwnProperty(p)) {
+                    if (isDefined(newPlugins[p])) {
+                        if (!isDefined(instance.prototype[p])) {
+                            instance.prototype[p] = newPlugins[p];
+                        } else if (p === "me") {
+                            instance.prototype[p] = newPlugins[p];
+                        }
                     }
                 }
             }
@@ -150,15 +147,15 @@ SOFTWARE.
             for (var i = 0, m = arguments.length; i < m; i++) {
                 var e = get(arguments[i]);
                 if (isDefined(e)) {
-                    if (isDefined(e.length) && e.length > 0 && e.tagName !== 'SELECT') {
+                    if (isDefined(e.length) && e.length > 0 && e.tagName !== "SELECT") {
                         for (var le = 0; le < e.length; le++) {
                             var lv = get(e[le]);
                             if (isDefined(lv)) { o.push(lv); }
                         }
                     } else {
-                        if (isDefined(e.length) && e.length > 0 && e.tagName === 'SELECT') {
+                        if (isDefined(e.length) && e.length > 0 && e.tagName === "SELECT") {
                             o.push(e);
-                        } else if (isDefined(e.length) && e.length == 0) { 
+                        } else if (isDefined(e.length) && e.length === 0) { 
                             if (e === window) {
                                 o.push(e);
                             }
@@ -169,9 +166,8 @@ SOFTWARE.
                     }
                 }
             }
-        } else {
-            return st;
         }
+
         plugins.me = o;
         return new instance(plugins);
     };
@@ -183,10 +179,11 @@ SOFTWARE.
         ///	<param name="extension" type="object">
         ///	 Object to be attached
         ///	</param>
-        var p = null;
-        for (p in extension) {
-            if (isDefined(extension[p])) {
-                sj[p] = extension[p];
+        for (var p in extension) {
+            if (extension.hasOwnProperty(p)) {
+                if (isDefined(extension[p])) {
+                    sj[p] = extension[p];
+                }
             }
         }
     };
@@ -208,9 +205,11 @@ SOFTWARE.
             ///  }
             ///	</param> 
             for (var p in extension) {
-                if (isDefined(extension[p])) {
-                    if (!isDefined(plugins[p])) {
-                        plugins[p] = extension[p];
+                if (extension.hasOwnProperty(p)) {
+                    if (isDefined(extension[p])) {
+                        if (!isDefined(plugins[p])) {
+                            plugins[p] = extension[p];
+                        }
                     }
                 }
             }
@@ -259,7 +258,7 @@ SOFTWARE.
                 }
 
                 if (document.addEventListener) {
-                    document.addEventListener('DOMContentLoaded', function () {
+                    document.addEventListener("DOMContentLoaded", function () {
                         if (!readyExecuted) {
                             onReady();
                             readyExecuted = true;
@@ -305,7 +304,7 @@ SOFTWARE.
                             for (var i = 0, m = arg.length; i < m; i++) {
                                 var sArg = arg[i].split("=");
                                 if (sArg.length > 0) {
-                                    if ((sArg[0] == key)) {
+                                    if ((sArg[0] === key)) {
                                         return sArg[1];
                                     }
                                 }
@@ -356,14 +355,14 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this)) {
                 if (this.addEventListener) {
-                    if (event.substring(0, 2) === 'on') {
+                    if (event.substring(0, 2) === "on") {
                         event = event.substring(2);
                     }
                     this.addEventListener(event, callback, false);
                 } else if (this.attachEvent) {
                     if (event.length > 2) {
-                        if (event.substring(0, 2) !== 'on') {
-                            event = 'on' + event;
+                        if (event.substring(0, 2) !== "on") {
+                            event = "on" + event;
                         }
                     }
                     this.attachEvent(event, callback);
@@ -388,14 +387,14 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this)) {
                 if (this.removeEventListener) {
-                    if (event.substring(0, 2) === 'on') {
+                    if (event.substring(0, 2) === "on") {
                         event = event.substring(2);
                     }
                     this.removeEventListener(event, callback, false);
                 } else if (this.detachEvent) {
                     if (event.length > 2) {
-                        if (event.substring(0, 2) !== 'on') {
-                            event = 'on' + event;
+                        if (event.substring(0, 2) !== "on") {
+                            event = "on" + event;
                         }
                     }
                     this.detachEvent(event, callback);
@@ -425,7 +424,7 @@ SOFTWARE.
                 event = event || window.event;
                 var target = event.target || event.srcElement;
                 var children = get(p).getElementsByTagName(child);
-                if (children.length == 0) {
+                if (children.length === 0) {
                     if (get(p).querySelectorAll) {
                         children = get(p).querySelectorAll(child);
                     } 
@@ -433,16 +432,16 @@ SOFTWARE.
                 if (children.length > 0) {
                     for (var i = 0, m = children.length; i < m; i++) {
                         if (target.id.length > 0) {
-                            if (target.id == children[i].id) { callback.call(children[i]); }
+                            if (target.id === children[i].id) { callback.call(children[i]); }
                         } else {
-                            if (target == get(children[i])) { callback.call(children[i]); }
+                            if (target === get(children[i])) { callback.call(children[i]); }
                         }
                     }
                 } else {
                     if (target.id.length > 0) {
-                        if (target.id == children.id) { callback.call(children); }
+                        if (target.id === children.id) { callback.call(children); }
                     } else {
-                        if (target == children) { callback.call(children); }
+                        if (target === children) { callback.call(children); }
                     }
                 }
             }); 
@@ -459,7 +458,7 @@ SOFTWARE.
         ///	</param>
         ///	<returns type="this" /> 
         this.forEach(function () {
-            sj(this).addEvent('click', callback);
+            sj(this).addEvent("click", callback);
         });
         return this;
     };
@@ -473,7 +472,7 @@ SOFTWARE.
         ///	</param>
         ///	<returns type="this" /> 
         this.forEach(function () {
-            sj(this).addEvent('mouseover', callback);
+            sj(this).addEvent("mouseover", callback);
         });
         return this;
     };
@@ -487,7 +486,7 @@ SOFTWARE.
         ///	</param>
         ///	<returns type="this" /> 
         this.forEach(function () {
-            sj(this).addEvent('mouseout', callback);
+            sj(this).addEvent("mouseout", callback);
         });
         return this;
     };
@@ -524,7 +523,7 @@ SOFTWARE.
             return r;
         }
 
-        if (r.length == 1) {
+        if (r.length === 1) {
             return r[0];
         }
 
@@ -579,8 +578,8 @@ SOFTWARE.
 
         this.forEach(function () {
             var t = this;
-            var usevalue = (t.tagName.toLowerCase() === 'input' || t.tagName.toLowerCase() === 'textarea');
-            var isSelect = (t.tagName === 'SELECT');
+            var usevalue = (t.tagName.toLowerCase() === "input" || t.tagName.toLowerCase() === "textarea");
+            var isSelect = (t.tagName === "SELECT");
             if (returnVal) {
                 if (isSelect) {
                     //Read select/option value:
@@ -613,7 +612,7 @@ SOFTWARE.
                 }
                 return result[0];
             }
-            return '';
+            return "";
         }
 
         return this;
@@ -636,7 +635,7 @@ SOFTWARE.
         ///	</summary> 
         ///	<returns type="Boolean" /> 
         var r = false;
-        this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, '').length == 0; });
+        this.forEach(function () { r = sj(this).text().replace(/^\s+|\s+$/g, "").length === 0; });
         return r;
     };
  
@@ -652,41 +651,41 @@ SOFTWARE.
         if (arguments.length >= 1) {
             var newstyle = [];
             for (var i = 0, m = arguments.length; i < m; i++) {
-                if (contains(arguments[i],':')) {
+                if (contains(arguments[i],":")) {
                     newstyle.push(arguments[i]);
                 }
             }
             this.forEach(function () {
-                var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
-                if (current == null) { current = ''; }
-                var txt = '';
-                var sc = current.split(';');
+                var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute("style");
+                if (current == null) { current = ""; }
+                var txt = "";
+                var sc = current.split(";");
                 var exclude = [];
                 for (var i = 0, mi = sc.length; i < mi; i++) {
-                    var term = sc[i].split(':');
+                    var term = sc[i].split(":");
                     for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
-                        var nterm = newstyle[ns].split(':');
-                        if (nterm[0] == term[0]) {
+                        var nterm = newstyle[ns].split(":");
+                        if (nterm[0] === term[0]) {
                             sc[i] = newstyle[ns];
                             exclude.push(ns);
                         }
                     }
                     if (sc[i].length > 1) {
-                        txt += sc[i].replace(';', '') + ';';
+                        txt += sc[i].replace(";", "") + ";";
                     }
                 }
                 for (var en = 0, enm = exclude.length; en < enm; en++) {
                     newstyle.splice(exclude[en], 1);
                 }
-                for (var ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
+                for (ns = 0, nsm = newstyle.length; ns < nsm; ns++) {
                     if (newstyle[ns].length > 1) {
-                        txt += newstyle[ns].replace(';', '') + ';';
+                        txt += newstyle[ns].replace(";", "") + ";";
                     }
                 }
                 if (window.attachEvent) {
                     get(this).style.cssText = txt;
                 } else {
-                    get(this).setAttribute('style', txt);
+                    get(this).setAttribute("style", txt);
                 }
 
             });
@@ -709,27 +708,29 @@ SOFTWARE.
         ///	<returns type="Boolean" /> 
         var result = false;
 
-        if (this.me.length == 0) { return result; }
+        if (this.me.length === 0) { return false; }
                         
 
         this.forEach(function () {
 
-            var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute('style');
+            var current = (window.attachEvent) ? get(this).style.cssText : get(this).getAttribute("style");
             if (current == null) { return false; }
-            var sc = current.split(';');
-            var to = '';
-            var val = '*';
-            if (contains(style,':')) {
-                var spl = style.split(':');
+            var sc = current.split(";");
+            var to;
+            var val = "*";
+
+            if (contains(style,":")) {
+                var spl = style.split(":");
                 to = spl[0];
                 val = spl[1];
             } else {
                 to = style;
             }
+
             for (var i = 0, m = sc.length; i < m; i++) {
-                var term = sc[i].split(':');
-                if (term.length == 2) {
-                    if (val != '*') {
+                var term = sc[i].split(":");
+                if (term.length === 2) {
+                    if (val !== "*") {
                         if (trim(term[0].toLowerCase()) === trim(to.toLowerCase()) && trim(term[1].toLowerCase()) === trim(val.toLowerCase())) {
                             result = true;
                         }
@@ -740,7 +741,7 @@ SOFTWARE.
                     }
                 }
             }
-
+            return false;
         });
          
         return result; 
@@ -763,7 +764,7 @@ SOFTWARE.
         ///	<returns type="this" />
 
         this.forEach(function () {
-            get(this).style.display = inherit ? 'inherit' : 'block';
+            get(this).style.display = inherit ? "inherit" : "block";
         });
 
         return this;
@@ -775,7 +776,7 @@ SOFTWARE.
         ///	</summary> 
         ///	<returns type="this" /> 
         this.forEach(function () {
-            get(this).style.display = 'none';
+            get(this).style.display = "none";
         });
         return this;
     };
@@ -795,15 +796,15 @@ SOFTWARE.
         ///	</summary> 
         /// </signature> 
         this.forEach(function () { 
-            get(this).style.display = (get(this).style.display == 'none')
-                                       ? (inherit ? 'inherit' : 'block') : 'none';
+            get(this).style.display = (get(this).style.display === "none")
+                                       ? (inherit ? "inherit" : "block") : "none";
           
         });
         return this;
     }
 
-    var startClass = '(?:^|\\s)';
-    var endClass = '(?!\\S)'
+    var startClass = "(?:^|\\s)";
+    var endClass = "(?!\\S)";
 
     instance.prototype.classExists=function (className) {
         ///	<summary>
@@ -840,7 +841,7 @@ SOFTWARE.
                 } else {
                     if (!sj(this).classExists(className)) {
                         var current = this.className;
-                        this.className = className + ' ' + current;
+                        this.className = className + " " + current;
                     }
                 }
             } 
@@ -860,7 +861,7 @@ SOFTWARE.
         this.forEach(function () {
             if (isDefined(this.className)) {
                 if (sj(this).classExists(className)) {
-                    this.className = this.className.replace(new RegExp(startClass + className + endClass), '');
+                    this.className = this.className.replace(new RegExp(startClass + className + endClass), "");
                 }
             }
         });
@@ -1073,14 +1074,14 @@ SOFTWARE.
     };
      
     if (!window.smalljs) {
-        window.smalljs = window['smalljs'] = sj;
+        window.smalljs = window["smalljs"] = sj;
     }
     //alias
     if (!window.sj) {
-        window.sj = window['sj'] = sj;
+        window.sj = window["sj"] = sj;
     }
     
 
 
      
-})(document,this);
+})(document,window);

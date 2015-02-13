@@ -23,7 +23,7 @@ SOFTWARE.
 */
 (function (document, global, smalljs, get) {
 
-    var FUNCTION = 'function', UNDEFINED = 'undefined';
+    var FUNCTION = "function", UNDEFINED = "undefined";
 
     smalljs.extend({
         animate: function (params) {
@@ -137,7 +137,7 @@ SOFTWARE.
                 ///<param name="fn" type="function">
                 ///	 Function to be executed
                 ///</param>
-                smalljs(global).addEvent('scroll', fn);
+                smalljs(global).addEvent("scroll", fn);
             },
             onScrollToBottom: function (fn) {
                 ///	<summary>
@@ -148,7 +148,7 @@ SOFTWARE.
                 ///</param>
                 this.onScroll(function () {
 
-                    if ((smalljs.document.height() - smalljs.page.height()) == smalljs.page.scrollOffSet(global).Y) {
+                    if ((smalljs.document.height() - smalljs.page.height()) === smalljs.page.scrollOffSet(global).Y) {
                         if (typeof (fn) === FUNCTION) {
                             fn();
                         }
@@ -162,12 +162,12 @@ SOFTWARE.
                 ///<returns type="number" />
                 if (global.innerHeight) {
                     return global.innerHeight;
-                } else {
-                    return (document.documentElement.clientHeight ?
+                } 
+
+                return (document.documentElement.clientHeight ?
                         document.documentElement.clientHeight :
                         document.body.clientHeight);
-                }
-                return 0;
+            
             },
             width: function () {
                 ///<summary>
@@ -176,12 +176,11 @@ SOFTWARE.
                 ///<returns type="number" />
                 if (global.innerWidth) {
                     return global.innerWidth;
-                } else {
-                    return (document.documentElement.clientWidth ?
+                } 
+
+                return (document.documentElement.clientWidth ?
                         document.documentElement.clientWidth :
                         document.body.clientWidth);
-                }
-                return 0;
             },
             scrollOffSet: function (obj) {
                 ///	<summary>
@@ -202,7 +201,7 @@ SOFTWARE.
                     //use document
                     var doc = obj.document;
                     if (typeof (doc) !== UNDEFINED) {
-                        if (doc.compatMode === 'CSS1Compat') {
+                        if (doc.compatMode === "CSS1Compat") {
                             r.X = doc.documentElement.scrollLeft;
                             r.Y = doc.documentElement.scrollTop;
                         } else {
@@ -233,7 +232,7 @@ SOFTWARE.
                         do {
                             point.X += o.offsetLeft;
                             point.Y += o.offsetTop;
-                        } while (o = o.offsetParent)
+                        } while ((o = o.offsetParent))
                     }
                 }
                 return point;

@@ -23,17 +23,16 @@ SOFTWARE.
 */
 (function (smalljs,global) {
 
-    var f = null;
-    var $ = smalljs.get;
-    var UNDEFINED = 'undefined';
+    var f = null; 
+    var UNDEFINED = "undefined";
 
     var FORM_TYPE = {
-        SELECT_MULTIPLE: 'select-multiple',
-        SELECT_ONE: 'select-one',
-        CHECKBOX: 'checkbox',
-        RADIO: 'radio',
-        SUBMIT: 'submit',
-        BUTTON: 'button'
+        SELECT_MULTIPLE: "select-multiple",
+        SELECT_ONE: "select-one",
+        CHECKBOX: "checkbox",
+        RADIO: "radio",
+        SUBMIT: "submit",
+        BUTTON: "button"
     };
 
     function isDefined(o) {
@@ -72,8 +71,7 @@ SOFTWARE.
             ///	</summary> 
             if (isDefined(f)) {
                 for (var i = 0, m = f.elements.length; i < m; i++) {
-                    if (typeof (f.elements[i].name) !== UNDEFINED) {
-                        var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
+                    if (typeof (f.elements[i].name) !== UNDEFINED) { 
                         if (f.elements[i].type === FORM_TYPE.SELECT_MULTIPLE || f.elements[i].type === FORM_TYPE.SELECT_ONE) {
                             for (var o = 0; o < f.elements[i].options.length; o++) {
                                 f.elements[i].options[o].selected = false;
@@ -82,7 +80,7 @@ SOFTWARE.
                             f.elements[i].checked = false;
                         } else {
                             if (f.elements[i].type !== FORM_TYPE.BUTTON && f.elements[i].type !== FORM_TYPE.SUBMIT) {
-                                f.elements[i].value = '';
+                                f.elements[i].value = "";
                             }
                         }
                     }
@@ -90,7 +88,7 @@ SOFTWARE.
             }
         };
 
-        this.set = function (json) {
+        this.set = function () {
              ///<summary>
             ///  set form fields from a json file. (Not Implemented)
             ///	</summary> 
@@ -107,16 +105,16 @@ SOFTWARE.
             if (isDefined(f)) {
                 for (var i = 0, m = f.elements.length; i < m; i++) {
                     if (typeof (f.elements[i].name) !== UNDEFINED) {
-                        var name = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
+                        var nme = (f.elements[i].name.length > 0) ? f.elements[i].name : f.elements[i].type + i;
                         if (f.elements[i].type === FORM_TYPE.SELECT_MULTIPLE || f.elements[i].type === FORM_TYPE.SELECT_ONE) {
-                            items[name] = readOption(f.elements[i]);
+                            items[nme] = readOption(f.elements[i]);
                         } else if (f.elements[i].type === FORM_TYPE.CHECKBOX || f.elements[i].type === FORM_TYPE.RADIO) {
                             if (f.elements[i].checked) {
-                                items[name] = f.elements[i].value;
+                                items[nme] = f.elements[i].value;
                             }
                         } else {
                             if (f.elements[i].type !== FORM_TYPE.BUTTON && f.elements[i].type !== FORM_TYPE.SUBMIT) {
-                                items[name] = f.elements[i].value;
+                                items[nme] = f.elements[i].value;
                             }
                         }
                     }

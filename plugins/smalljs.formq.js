@@ -13,7 +13,7 @@
                 ///	 Element id, name, or reference
                 ///	</param>
                 ///	<returns type="number" />
-                if (typeof (obj.length) !== 'undefined') {
+                if (typeof (obj.length) !== "undefined") {
                     var index = -1;
                     for (var i = 0, m = obj.length; i < m; i++) {
                         if (obj[i].checked) {

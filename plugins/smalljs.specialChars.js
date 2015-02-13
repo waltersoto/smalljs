@@ -24,14 +24,14 @@ SOFTWARE.
 (function (sj) {
 
     var remove = function (text) {
-        return text.replace(/[^a-zA-Z 0-9 ,.-]+/g, '');
+        return text.replace(/[^a-zA-Z 0-9 ,.-]+/g, "");
     };
 
     var noChars = function () {
 
-        sj('[nochars]').forEach(function () {
-            (function (o) {
-                sj(o).addEvent('keyup', function () {
+        sj("[nochars]").forEach(function() {
+            (function(o) {
+                sj(o).addEvent("keyup", function() {
                     o.value = remove(o.value);
                 });
             })(this);

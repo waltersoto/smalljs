@@ -32,9 +32,9 @@ SOFTWARE.
             /// <param name="onScrollEnd" type="function([element id])">function to execute after the scroll completes</param> 
             ///	<returns type="element" />
             sj('[href^="#"]').forEach(function () {
-                var index = this.href.indexOf('#') + 1;
+                var index = this.href.indexOf("#") + 1;
                 var id = this.href.substring(index);
-                this.href = '#';
+                this.href = "#";
                 sj(this).onClick(function () {
                     scrl.to(id, onScrollEnd);
                 });
@@ -49,7 +49,7 @@ SOFTWARE.
             /// <param name="onScrollEnd" type="function([element id])">function to execute after the scroll completes</param> 
             ///	<returns type="element" />
             var o = $(id);
-            if (typeof o !== 'undefined') { 
+            if (typeof o !== "undefined") { 
                 var point = sj.page.pos(o);
                 var c = sj.page.scrollOffSet(window);
                 scrl.scrolling = true;
@@ -62,7 +62,7 @@ SOFTWARE.
                     },
                     callback: function () {
                         scrl.scrolling = false;
-                        if (typeof (onScrollEnd) === 'function') {
+                        if (typeof (onScrollEnd) === "function") {
                             onScrollEnd(id);
                         }
                     },

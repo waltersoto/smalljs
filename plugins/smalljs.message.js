@@ -23,8 +23,8 @@ SOFTWARE.
 */
 /* Required: smalljs.js  */
 (function (smalljs, $) {
-    
-    var FUNCTION = 'function', UNDEFINED = 'undefined';
+
+    var FUNCTION = "function", UNDEFINED = "undefined";
 
     var message = {
         cssClass: null,
@@ -67,7 +67,7 @@ SOFTWARE.
                 if (typeof (params.buttons.cancel) !== UNDEFINED) { this.setting.cancelText = params.buttons.cancel; }
                 if (typeof (params.buttons.width) !== UNDEFINED) { this.setting.buttonWidth = params.buttons.width; }
             }
-            if (typeof (msg) === UNDEFINED) { msg = ''; }
+            if (typeof (msg) === UNDEFINED) { msg = ""; }
             this.show(msg, {
                 width: params.width,
                 height: params.height,
@@ -284,19 +284,19 @@ SOFTWARE.
        
         },
         setting: {
-            reset: function () {
-                this.okText = 'OK',
-                this.cancelText = 'CANCEL';
+            reset: function() {
+                this.okText = "OK",
+                    this.cancelText = "CANCEL";
                 this.width = 250;
                 this.height = 145;
                 this.textAreaWidth = 240;
                 this.textAreaHeight = 100;
                 this.zIndex = 200;
                 this.animate = false;
-                this.backgroundColor = '#666666'
+                this.backgroundColor = "#666666";
             },
-            okText: 'OK',
-            cancelText: 'CANCEL',
+            okText: "OK",
+            cancelText: "CANCEL",
             backgroundColor: "#666666",
             zIndex: 200,
             width: 250,

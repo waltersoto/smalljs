@@ -1,22 +1,22 @@
 ﻿(function () {
 
 
-    var UNDEFINED = 'undefined',
-        DIV = 'div',
-        CSS_CLEAR = 'sj-cal-clear',
-        CSS_CAL = 'sj-cal',
-        CSS_OUTOF = 'sj-cal-outof',
-        CSS_TODAY = 'sj-cal-today',
-        CSS_RIGHT = 'right',
-        CSS_LEFT = 'left',
-        CSS_CENTER = 'center',
-        CSS_HEADER = 'header',
-        CSS_LABEL = 'lbl',
-        CSS_LABELS = 'labels',
-        CSS_DAYS = 'days',
-        CSS_DAY = 'day',
-        CSS_DAY_ROW = 'day-row';
-
+    var UNDEFINED = "undefined",
+        DIV = "div",
+        CSS_CLEAR = "sj-cal-clear",
+        CSS_CAL = "sj-cal",
+        CSS_OUTOF = "sj-cal-outof",
+        CSS_TODAY = "sj-cal-today",
+        CSS_RIGHT = "right",
+        CSS_LEFT = "left",
+        CSS_CENTER = "center",
+        CSS_HEADER = "header",
+        CSS_LABEL = "lbl",
+        CSS_LABELS = "labels",
+        CSS_DAYS = "days",
+        CSS_DAY = "day",
+        CSS_DAY_ROW = "day-row";
+     
     var dateMonthInfo = function (date) {
 
         if (typeof (date) === UNDEFINED) {
@@ -52,19 +52,17 @@
             t.setDate(0);
             return t.getDate();
         })(date);
-
-
-
+         
         this.nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
-
-
+         
         //Start of current month of month
         this.startOfMonth = new Date(this.year, this.month, 1);
 
         //Month starts on this day
         this.dayInFirstWeek = this.startOfMonth.getDay();
-    }
+    };
 
+    var info = new dateMonthInfo(today);
 
     var cal = function (params) {
         ///	<param name="params" type="object">
@@ -84,13 +82,13 @@
             return div;
         };
 
-        var clear = block(CSS_CLEAR, '&nbsp;');
+        var clear = block(CSS_CLEAR, "&nbsp;");
 
 
         var header = function (month, year) {
 
             var div = block(CSS_HEADER);
-            sj(div).delegate(DIV, 'click', function () {
+            sj(div).delegate(DIV, "click", function () {
                 if (sj(this).classExists(CSS_LEFT)) {
                     cal({
                         id: params.id,
@@ -115,11 +113,12 @@
 
             });
 
-            var l = block(CSS_LEFT, '<');
 
-            var c = block(CSS_CENTER, month + ', ' + year);
+            var l = block(CSS_LEFT, "<");
 
-            var r = block(CSS_RIGHT, '>');
+            var c = block(CSS_CENTER, month + ", " + year);
+
+            var r = block(CSS_RIGHT, ">");
 
             div.appendChild(l);
             div.appendChild(c);
@@ -130,21 +129,23 @@
 
         };
 
+        var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var days = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+
         var labels = function () {
 
-            var div = block(CSS_LABELS);
+            var lblDiv = block(CSS_LABELS);
 
-            var lbl = null;
-            for (var i = 0, max = days.length; i < max; i++) {
-                lbl = block( CSS_LABEL, days[i]);
-                div.appendChild(lbl);
+            var lbl;
+            for (var lin = 0, max = days.length; lin < max; lin++) {
+                lbl = block(CSS_LABEL, days[lin]);
+                lblDiv.appendChild(lbl);
             }
-            div.appendChild(clear); 
-            return div;
+            lblDiv.appendChild(clear);
+            return lblDiv;
         };
 
-        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var days = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
+
 
 
         var today = new Date();
@@ -153,12 +154,8 @@
             today = new Date(params.date.valueOf());
         }
 
-        
-
-        var info = new dateMonthInfo(today);
-
         if (typeof (params.bindto) !== UNDEFINED) {
-            sj(params.bindto).text((info.month + 1) + '/' + info.today + '/' + info.year);
+            sj(params.bindto).text((info.month + 1) + "/" + info.today + "/" + info.year);
         }
 
         var div = block(CSS_CAL);
@@ -166,12 +163,11 @@
         div.appendChild(clear);
 
         var daysDiv = block(CSS_DAYS);
-        sj(daysDiv).delegate(DIV, 'click', function () {
+        sj(daysDiv).delegate(DIV, "click", function () {
             if (!sj(this).classExists(CSS_LABEL)) {
-                var selected = '';
-                var selectedMonth = info.month;
-                var selectedDay = info.today;
-                var selectedYear = info.year;
+                var selectedMonth;
+                var selectedDay;
+                var selectedYear;
 
                 if (sj(this).classExists(CSS_OUTOF)) {
                     var omonth = this.innerHTML;
@@ -204,7 +200,7 @@
                 }
 
                 if (typeof (params.bindto) !== UNDEFINED) {
-                    sj(params.bindto).text((selectedMonth + 1) +'/'+ selectedDay  + '/' + selectedYear);
+                    sj(params.bindto).text((selectedMonth + 1) +"/"+ selectedDay  + "/" + selectedYear);
                 }
             }
 
@@ -218,7 +214,7 @@
         var nextMonth = 0;
 
         var lastMonth = (info.lastMonthEnds - (info.dayInFirstWeek - 1));
-        if (info.dayInFirstWeek == 0) { lastMonth = info.lastMonthEnds - 6; }
+        if (info.dayInFirstWeek === 0) { lastMonth = info.lastMonthEnds - 6; }
 
 
         for (var i = 0; i < 6; i++) {
@@ -253,14 +249,14 @@
 
         }
     
-        for (var i = 0; i < weeks.length; i++) {
+        for (i = 0; i < weeks.length; i++) {
             var wrow = block(CSS_DAY_ROW);
 
             for (var w = 0; w < weeks[i].length; w++) {
 
                 var dcell = block(CSS_DAY, weeks[i][w].v);
 
-                if (weeks[i][w].v == info.today && !weeks[i][w].o) {
+                if (weeks[i][w].v === info.today && !weeks[i][w].o) {
                     sj(dcell).addClass(CSS_TODAY);
                 }
 

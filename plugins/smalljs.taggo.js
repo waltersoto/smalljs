@@ -28,9 +28,35 @@ SOFTWARE.
     var toRemove = [];
     var params = null;
 
+    function addToRemove(tag) {
+        var removeIndex = tags.indexOf(tag);
+        if (removeIndex === -1) {
+            toRemove.push(tag);
+        }
+    }
+
+    function loadTags(tagsParams) {
+        sj(tagsParams.display).text("");
+        var i = 0;
+        for (var t in tags) {
+            if (tags.hasOwnProperty(t)) {
+                i++;
+                (function(tag) {
+                    var div = document.createElement("div");
+                    div.innerHTML = tag;
+                    sj(div).addClass(tagsParams.tagClass);
+                    sj(div).onClick(function() {
+                        remove(tag, tagsParams.display, tagsParams.tagClass);
+                    });
+                    sj(tagsParams.display).appendChild(div);
+                })(tags[t]);
+            }
+        }
+    }
+
     function remove(tag, displayId, tagClass) {
         var index = tags.indexOf(tag);
-        if (index != -1) {
+        if (index !== -1) {
             tags.splice(index, 1);
             addToRemove(tag);
         }
@@ -39,15 +65,22 @@ SOFTWARE.
 
     function deleteFromRemove(tag) {
         var index = toRemove.indexOf(tag);
-        if (index != -1) {
+        if (index !== -1) {
            toRemove.splice(index, 1);
         }
     }
-
-    function addToRemove(tag) {
-        var removeIndex = tags.indexOf(tag);
-        if (removeIndex == -1) {
-            toRemove.push(tag);
+   
+    function add() {
+        if (!sj(params.textbox).isEmpty()) {
+            var fromText = $(params.textbox).value.split(",");
+            for (var textLoop = 0; textLoop < fromText.length; textLoop++) {
+                if (tags.indexOf(sj.trim(fromText[textLoop])) === -1 && sj.trim(fromText[textLoop]).length > 0) {
+                    tags.push(sj.trim(fromText[textLoop]));
+                    deleteFromRemove(sj.trim(fromText[textLoop])); //Remove from list is needed
+                }
+            }
+            loadTags({ display: params.display, tagClass: params.tagClass }); //reload tags 
+            sj(params.textbox).text("");
         }
     }
 
@@ -58,52 +91,11 @@ SOFTWARE.
         } else {
             key = e.which;     //firefox
         } 
-        if (key == 188 || key == 13) {
+        if (key === 188 || key === 13) {
             add(); 
             return false; 
         }
         return true;
-    }
-
-    function add() { 
-        if (!sj(params.textbox).isEmpty()) {
-            var fromText = $(params.textbox).value.split(','); 
-            for (var textLoop = 0; textLoop < fromText.length; textLoop++) {
-                if (tags.indexOf(sj.trim(fromText[textLoop])) === -1 && sj.trim(fromText[textLoop]).length > 0) {
-                    tags.push(sj.trim(fromText[textLoop]));
-                    deleteFromRemove(sj.trim(fromText[textLoop])); //Remove from list is needed
-                }
-            }
-            loadTags({ display: params.display, tagClass: params.tagClass }); //reload tags 
-            sj(params.textbox).text('');
-        } 
-    }
-
-    function loadTags(params) {
-        sj(params.display).text('');
-        var i = 0;
-        var first = true;
-        for (var t in tags) {
-            i++;
-            (function (tag) {
-                var div = document.createElement('div');
-                div.innerHTML = tag;
-                sj(div).addClass(params.tagClass);
-                sj(div).onClick(function () {
-                    remove(tag, params.display, params.tagClass);
-                });
-                sj(params.display).appendChild(div);
-            })(tags[t]);
-           
-        }
-    }
-
-    function nodeinsert(newElement, parent) { 
-        if (typeof (parent) === 'undefined') {
-            document.body.appendChild(newElement);
-        } else {
-            sj(parent).appendChild(newElement);
-        }
     }
 
     sj.extend({
@@ -122,12 +114,12 @@ SOFTWARE.
                 ///}
                 ///	</param>
                 params = parameters;
-                if (typeof (params.button) !== 'undefined') {
+                if (typeof (params.button) !== "undefined") {
                     sj(params.button).onClick(function () {
                         add();
                     });
                 }
-                sj(params.textbox).addEvent('onkeyup', function (event) {
+                sj(params.textbox).addEvent("onkeyup", function (event) {
                     return handleAdd(event);
                 });
 
@@ -144,7 +136,6 @@ SOFTWARE.
                 /// Load an array of tags
                 ///	</summary>
                 ///	<param name="tagArray" type="array"></param>
-                params = param
                 if (tagArray.constructor === Array) {
                     tags = tagArray;
                     loadTags({ display: params.display, tagClass: params.tagClass });
