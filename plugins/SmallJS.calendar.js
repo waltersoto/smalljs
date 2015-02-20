@@ -62,7 +62,7 @@
         this.dayInFirstWeek = this.startOfMonth.getDay();
     };
 
-    var info = new dateMonthInfo(today);
+    var info = new dateMonthInfo(this.today);
 
     var cal = function (params) {
         ///	<param name="params" type="object">
@@ -74,12 +74,12 @@
         ///}
         ///	</param>
         var block = function (cssClass, txt) {
-            var div = document.createElement(DIV);
-            sj(div).addClass(cssClass);
+            var blockDiv = document.createElement(DIV);
+            sj(blockDiv).addClass(cssClass);
             if (typeof (txt) !== UNDEFINED) {
-                sj(div).text(txt);
+                sj(blockDiv).text(txt);
             }
-            return div;
+            return blockDiv;
         };
 
         var clear = block(CSS_CLEAR, "&nbsp;");
@@ -87,8 +87,8 @@
 
         var header = function (month, year) {
 
-            var div = block(CSS_HEADER);
-            sj(div).delegate(DIV, "click", function () {
+            var headerDiv = block(CSS_HEADER);
+            sj(headerDiv).delegate(DIV, "click", function () {
                 if (sj(this).classExists(CSS_LEFT)) {
                     cal({
                         id: params.id,
@@ -120,12 +120,12 @@
 
             var r = block(CSS_RIGHT, ">");
 
-            div.appendChild(l);
-            div.appendChild(c);
-            div.appendChild(r);
-            div.appendChild(clear);
+            headerDiv.appendChild(l);
+            headerDiv.appendChild(c);
+            headerDiv.appendChild(r);
+            headerDiv.appendChild(clear);
 
-            return div;
+            return headerDiv;
 
         };
 

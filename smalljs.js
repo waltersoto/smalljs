@@ -38,6 +38,10 @@ SOFTWARE.
     function isDefined(o) {
         return typeof o !== UNDEFINED;
     }
+
+    function noNullOrUndefined(o) {
+        return o !== null && isDefined(o);
+    }
     function contains(str,substring) {
         return str.indexOf(substring) !== -1;
     }
@@ -53,42 +57,58 @@ SOFTWARE.
         var elements = [], doc = document, i = 0, m = 0;
 
         for (i = 0, m = arguments.length; i < m; i++) {
-            var element = null, arg = arguments[i];
+            var element, arg = arguments[i];
             if (typeof arg === "string") {
                 element = doc.getElementById(arg);
-                if (element === null || !isDefined(element)) {
+                if (element === null) {
                     element = doc.getElementsByTagName(arg);
                     if (element.length === 1) { element = element[0]; } else if (element.length > 1) { return element; }
                 }
-                if (element.length === 0) {
-                    element = doc.getElementsByName(arg);
-                    if (element.length === 1) { element = element[0]; } else if (element.length > 1) { return element; }
-                }
-                if (element.length === 0) {
-                    if (arg.length > 0 && arg.charAt(0) == '.') {
-                        if (doc.getElementsByClassName) {
-                            element = doc.getElementsByClassName(arg.substring(1));
-                            if (element.length === 1) { element = element[0]; }
+
+                if (noNullOrUndefined(element)) { 
+                    if (element.length === 0) {
+                        element = doc.getElementsByName(arg);
+                        if (element.length === 1) {
+                            element = element[0];
+                        } else if (element.length > 1) {
+                            return element;
                         }
                     }
                 }
-                if (element.length === 0) {
-                    if (doc.querySelectorAll) {
-                        try {
-                            element = doc.querySelectorAll(arg);
-                        } catch (e) {
-                            //console.log(e);
+
+                if (noNullOrUndefined(element)) {
+                    if (element.length === 0) {
+                        if (arg.length > 0 && arg.charAt(0) === ".") {
+                            if (doc.getElementsByClassName) {
+                                element = doc.getElementsByClassName(arg.substring(1));
+                                if (element.length === 1) {
+                                    element = element[0];
+                                }
+                            }
                         }
                     }
-                    return element;
                 }
+
+                if (noNullOrUndefined(element)) {
+                    if (element.length === 0) {
+                        if (doc.querySelectorAll) {
+                            try {
+                                element = doc.querySelectorAll(arg);
+                            } catch (e) {
+                                //console.log(e);
+                            }
+                        }
+                        return element;
+                    }
+                }
+
             } else {
                 element = arg;
             }
             if (arguments.length === 1) {
                 return element;
             }
-            if (element !== null) {
+            if (noNullOrUndefined(element)) {
                 if (element.length) {
                     for (var s = 0, max = element.length; s < max; s++) {
                         elements.push(element[s]);
