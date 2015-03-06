@@ -638,6 +638,27 @@ SOFTWARE.
         return this;
     };
 
+    instance.prototype.insertAtCursor = function(content) {
+        ///	<summary>
+        ///	Insert text at cursor in a text element
+        ///	</summary>
+        ///	<param name="content" type="string">
+        ///	 Content to insert
+        ///	</param>  
+        this.forEach(function() {
+             
+            if (this.selectionStart) {
+                var pos = this.selectionStart;
+                var half1 = sj(this).text().substring(0, pos);
+                var half2 = sj(this).text().substring(pos, sj(this).text().length);
+                sj(this).text(half1 + content + half2);
+            } else {
+                sj(this).appendText(content);
+            }
+        });
+        return this;
+    };
+
     instance.prototype.appendText = function (content) {
         ///	<summary>
         ///	Append text to an element
