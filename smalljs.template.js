@@ -24,11 +24,7 @@ SOFTWARE.
 (function (smalljs, ajax) {
 
     var folder;
-
-    var whatWhat = function(expr) {
-        new Function("return " + expr)();
-    };
-
+     
     var toDom = function(txt) {
         var temp = document.createElement("div");
         temp.innerHTML = txt;
@@ -51,6 +47,10 @@ SOFTWARE.
                 resultType: "String"
             });   
     };
+
+    var validTemplatedData = function(o) {
+        return o.hasOwnProperty("template") && o.hasOwnProperty("data");
+    }
 
     var template = function (templateFolder) {
 
@@ -117,6 +117,40 @@ SOFTWARE.
 
                 }
             },true);
+
+
+        };
+
+        this.loadCustoms = function(templatedBindings, callback) {
+            ///	<summary>
+            ///	Load template as text with data biding
+            ///	</summary>  
+            ///	<param name="templatedBindings" type="json">
+            ///	 Data to bind. (ex. [{template:'templateFile.html',data:{'label1':'data'},{'label2','data'}}]
+            ///	</param> 
+            ///	<param name="callbacks" type="function">
+            ///	 Function that will receive and array of template instances. (ex. function(html[]){})
+            ///	</param>  
+
+            if (typeof templatedBindings !== "undefined"
+                && templatedBindings !== null
+                && validTemplatedData(templatedBindings)) {
+
+                var items = [];
+
+                for (var i = 0, max = templatedBindings.length; i < max; i++) {
+
+                    var t = templatedBindings[i];
+                    this.loadWith(t.template, t.data,
+                        function(html) {
+                            item.push(html);
+                        }); 
+                }
+
+                if (typeof callback === "function") {
+                    callback(items);
+                }
+            }
 
 
         };
