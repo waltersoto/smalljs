@@ -985,7 +985,7 @@ SOFTWARE.
                
             }
         });
-
+        return this;
     };
 
     instance.prototype.children = function (selector, callback) {
