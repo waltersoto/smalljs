@@ -30,7 +30,9 @@ SOFTWARE.
 
     var TAG = {
         INPUT: "input",
-        TEXT_AREA: "textarea"
+        RADIO: "radio",
+        TEXT_AREA: "textarea",
+        SELECT: "select"
     }
 
     var UNDEFINED = "undefined";
@@ -66,20 +68,45 @@ SOFTWARE.
             if (typeof nodes !== "undefined" && nodes !== null && nodes.length > 0) {
                 for (var i = 0; i < nodes.length; i++) {
                     var propName = nodes[i].attributes.getNamedItem(ATT.PROPERTY).value;
-                    var value = "";
+           
                     switch (nodes[i].tagName.toLowerCase()) {
                         case TAG.TEXT_AREA:
-                        case TAG.INPUT: value = nodes[i].value;
+                        case TAG.INPUT:
+                            var type = nodes[i].type;
+                            switch (type.toLowerCase()) {
+                                case "radio":
+                                    if(nodes[i].checked){
+                                        set[propName] = nodes[i].value;
+                                    } 
+                                    break;
+                                default:
+                                    set[propName] = nodes[i].value;
+                                    break;
+                            } 
+                            break;
+                        case TAG.SELECT:
+                            if (typeof nodes[i].selectedIndex !== "undefined"
+                                && nodes[i].selectedIndex !== -1) {
+                                if (nodes[i].multiple) {
+                                    var v = [];
+                                    for (var oi = 0, m = nodes[i].length; oi < m; oi++) {
+                                        if (nodes[i].options[oi].selected) {
+                                            v.push(nodes[i].options[oi].value);
+                                        }
+                                    }
+                                    set[propName] = v;
+                                } else {
+                                    set[propName] = nodes[i].options[nodes[i].selectedIndex].value;
+                                }
+                            }
                             break;
                         default:
-                            if (typeof (nodes[i].innerHTML) !== UNDEFINED) {
-                                value = nodes[i].innerHTML;
+                            if (typeof (nodes[i].innerHTML) !== UNDEFINED) { 
+                                set[propName] = nodes[i].innerHTML;
                             }
 
                             break;
-                    }
-
-                    set[propName] = value;
+                    } 
                 }
             }
 
@@ -98,8 +125,37 @@ SOFTWARE.
                         if (typeof element !== UNDEFINED && element.length > 0) {
                             switch (element[0].tagName.toLowerCase()) {
                             case TAG.TEXT_AREA:
-                            case TAG.INPUT:
-                                element[0].value = json[p];
+                                case TAG.INPUT:
+                                    if (element[0].type.toLowerCase() === "radio") {
+                                        for (var ri = 0, rm = element.length; ri < rm; ri++) {
+                                            if (element[ri].value.toLowerCase() === json[p].toLowerCase()) {
+                                                element[ri].checked = true;
+                                            }
+                                        }
+                                    } else {
+                                        element[0].value = json[p];
+                                    }
+                                
+                                break;
+                                case TAG.SELECT:
+
+                                    if (json[p].constructor !== Array) {
+                                        for (var oi = 0, m = element[0].length; oi < m; oi++) {
+                                            if (element[0].options[oi].value.toLowerCase() === json[p].toLowerCase()) {
+                                                element[0].options[oi].selected = true;
+                                            }
+                                        }
+                                    } else {
+                                        for (var ji = 0, jm = json[p].length; ji < jm; ji++) {
+                                            for (oi = 0, m = element[0].length; oi < m; oi++) {
+                                                if (element[0].options[oi].value.toLowerCase() === json[p][ji].toLowerCase()) {
+                                                    element[0].options[oi].selected = true;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                              
                                 break;
                             default:
                                 if (typeof (element[0].innerHTML) !== UNDEFINED) {
