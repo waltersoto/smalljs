@@ -168,7 +168,7 @@ SOFTWARE.
                         switch (format.toString().toUpperCase()) {
                             case RESULT.STRING: result = xH.responseText; //Text
                                 break;
-                            case RESULT.XML: result = xml.parse(xH.responseText);
+                            case RESULT.XML: result = parseXml(xH.responseText);
                                 break;
                             case RESULT.JSON: result = xH.responseText;
                                 if (typeof (JSON) !== UNDEFINED) {
@@ -235,7 +235,7 @@ SOFTWARE.
                                 switch (format.toString().toUpperCase()) {
                                     case RESULT.STRING: result = xH.responseText; //Text
                                         break;
-                                    case RESULT.XML: result = xml.parse(xH.responseText);
+                                    case RESULT.XML: result = parseXml(xH.responseText);
                                         break;
                                     case RESULT.JSON: result = xH.responseText;
                                         if (typeof (JSON) !== UNDEFINED) {
