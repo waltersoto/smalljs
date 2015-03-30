@@ -193,7 +193,75 @@ SOFTWARE.
         })(request());
     };
 
-    function  call(req) {
+
+    var callbackEvents = {
+        response: "response",
+        timeOut: "time-out",
+        error: "error",
+        header:"header"
+    };
+    var callbackQueue = [];
+
+    var requestEvents = function() {
+
+        this.timeOut = function (callback) {
+            ///	<summary>
+            ///	Handle timeout event
+            ///	</summary>
+            ///	<param name="callback" type="function">
+            ///	 Callback function
+            ///	</param>
+            if (typeof callback === "function") {
+                callbackQueue[callbackEvents.timeOut] = callback;
+            }
+            return this;
+        };
+
+        this.response = function (callback) {
+            ///	<summary>
+            ///	Handle asynchronous response event
+            ///	</summary>
+            ///	<param name="callback" type="function">
+            ///	 Callback function (ex. function(result){})
+            ///	</param>
+            if (typeof callback === "function") { 
+                callbackQueue[callbackEvents.response] = callback;
+            } 
+            return this;
+        };
+
+        this.error = function (callback) {
+            ///	<summary>
+            ///	Handle asynchronous error event
+            ///	</summary>
+            ///	<param name="callback" type="function">
+            ///	 Callback function (ex. function(state,message){})
+            ///	</param>
+            if (typeof callback === "function") {
+                callbackQueue[callbackEvents.error] = callback;
+            }
+            return this;
+        };
+
+        this.header = function (callback) {
+            ///	<summary>
+            ///	Handle header string request
+            ///	</summary>
+            ///	<param name="callback" type="function">
+            ///	 Callback function (ex. function(result){})
+            ///	</param>
+            if (typeof callback === "function") {
+                callbackQueue[callbackEvents.header] = callback;
+            }
+            return this;
+        };
+
+    };
+
+    
+
+    function call(req) {
+          
         ///	<summary>
         ///	Perform an Ajax call
         ///	</summary>
@@ -216,7 +284,7 @@ SOFTWARE.
         ///      onResponseHeader:function()
         ///  }
         ///	</param> 
-    
+         
             if (isDefined(req.url)) { 
                 var format = isDefined(req.resultType) ? req.resultType : RESULT.JSON ,parameters = "";
                 if (isDefined(req.data)) {
@@ -246,15 +314,31 @@ SOFTWARE.
                                         break;
                                     default: result = xH.responseText;
                                         break;
+
+                                        
                                 }
                                 if (status === 200) {
-                                    if (isFunction(req.onResponseHeader)) {
+                                      
+
+                                     
+                                    if (typeof callbackQueue[callbackEvents.header] === "function") {
+                                        callbackQueue[callbackEvents.header](xH.getAllResponseHeaders());
+                                    } 
+                                    if (isFunction(req.onResponseHeader)) { 
                                         req.onResponseHeader(xH.getAllResponseHeaders());
+                                    }
+
+                                    if (typeof callbackQueue[callbackEvents.response] === "function") {
+                                        callbackQueue[callbackEvents.response](result);
                                     }
                                     if (isFunction(req.onResponse)) {
                                         req.onResponse(result);
                                     }
+
                                 } else {
+                                    if (typeof callbackQueue[callbackEvents.error] === "function") {
+                                        callbackQueue[callbackEvents.error](status, xH.statusText);
+                                    }
                                     if (isFunction(req.onError)) {
                                         req.onError(status, xH.statusText);
                                     }
@@ -274,9 +358,14 @@ SOFTWARE.
                     }
                   
                     var contentType = isDefined(req.contentType) ? req.contentType : DEFAULT_CONTENT_TYPE;
-                    if (isDefined(req.timeout)) {
-                        xH.timeout = req.timeout; 
+                    if (typeof callbackQueue[callbackEvents.timeOut] === "function") {
+                        xH.timeout = callbackQueue[callbackEvents.timeOut];
+                    } else {
+                        if (isDefined(req.timeout)) {
+                            xH.timeout = req.timeout; 
+                        }
                     }
+
                     if (isFunction(req.onTimeout)) {
                         xH.ontimeout = req.onTimeout;
                     }
@@ -287,12 +376,17 @@ SOFTWARE.
                     } else {
                         xH.send(params);
                     }
-                } else { 
+                } else {
+                    if (typeof callbackQueue[callbackEvents.error] === "function") {
+                        callbackQueue[callbackEvents.error]("0", "Browser does not support ajax");
+                    }
                     if (isFunction(req.onError)) {
                         req.onError("0", "Browser does not support ajax");
                     } 
                 }
-            }           
+            }
+
+        return new requestEvents();
     }
 
     smalljs.extend({
