@@ -620,7 +620,12 @@ SOFTWARE.
                 if (usevalue) {
                     t.value = content;
                 } else {
-                    t.innerHTML = content;
+                    if (t.textContent) {
+                        t.textContent = content;
+                    } else {
+                       t.innerHTML = content; 
+                    }
+                    
                 }
             }
         });
